@@ -8,115 +8,95 @@ struct record
 {
     E info;
     int key;
+    record<E> *prev;
+    record<E> *next;
 
-    record() : info(), key(0) {}
+    record() : info(), key(0), prev(NIL), next(NIL) {}
 
-    record(const E &info_, int key_) : info(info_), key(key_) {}
+    record(const E &info_, int key_) : info(info_), key(key_), prev(NIL), next(NIL) {}
 
     ~record() {}
 };
-
 template <class E>
 class Dictionary
 {
 private:
-    record<E> *records;
-    size_t size;
-    size_t capacity;
-
-    void resize(bool increase = true)
-    {
-        size_t newCapacity = increase ? (capacity == 0 ? 2 : capacity * 2) : (size > 0 ? size : 1);
-        record<E> *newRecords = new record<E>[newCapacity]; // Use `new` instead of `malloc`
-
-        for (size_t i = 0; i < size; i++)
-        {
-            newRecords[i] = records[i]; // Copy objects properly
-        }
-
-        delete[] records; // Free old memory
-        records = newRecords;
-        capacity = newCapacity;
-    }
-
-    int search_index(int key, int p, int r)
-    {
-        if (r < p)
-            return -1; // Key not found, return -1
-
-        int med = (p + r) / 2; // Find the middle index
-        if (records[med].key == key)
-            return med; // If the key matches, return the index
-        else if (records[med].key > key)
-            return search_index(key, p, med - 1); // Search in the left half
-        else
-            return search_index(key, med + 1, r); // Search in the right half
-    }
+    record<E> *head;
 
 public:
     // Constructor
-    Dictionary() : records(NIL), size(0), capacity(0) {}
+    Dictionary() : head(NIL) {}
 
     // Destructor
     ~Dictionary()
     {
-        delete[] records;
+        record<E> *current = head;
+        while (current != NIL)
+        {
+            record<E> *temp = current;
+            current = current->next;
+            delete temp; // Free memory
+        }
+        head = NIL;
     }
 
     void insert(E info, int key)
     {
-        if (size == capacity)
-        {
-            resize(true);
-        }
-
-        size_t i = 0;
-        while (i < size && records[i].key < key)
-        {
-            i++;
-        }
-        if (i < size && records[i].key == key)
-        {
-            records[i].info = info;
-        }
-        else
-        {
-            for (size_t j = size; j > i; --j)
-            {
-                records[j] = records[j - 1];
-            }
-
-            records[i] = record<E>(info, key);
-            ++size;
-        }
+        record<E> *p = new record<E>(info, key); // Create new node
+        p->next = head;
+        if (head != NIL)
+            head->prev = p;
+        p->prev = NIL;
+        head = p;
     }
 
-    E search(int key)
+    E search(int key) const
     {
-        int i = search_index(key, 0, size - 1);
-        return (i == -1) ? NIL : records[i]->info;
+        record<E> *x = head;
+        while (x != NIL && x->key != key)
+            x = x->next;
+        return x->info;
+    }
+
+    void remove(int k)
+    {
+        record<E> *x = head;
+        while (x != NIL)
+        {
+            if (x->key == k)
+            {
+                if (x->next != NIL)
+                    x->next->prev = x->prev;
+                if (x->prev != NIL)
+                    x->prev->next = x->next;
+                else
+                    head = x->next;
+
+                record<E> *temp = x;
+                x = x->next;
+                delete temp;
+            }
+            else
+                x = x->next;
+        }
     }
 
     void display() const
     {
-        for (size_t i = 0; i < size; ++i)
-        {
-            cout << "Record " << i + 1 << ": Info = " << records[i].info << ", Key = " << records[i].key << endl;
+        if (head == NIL) {
+            cout << "Dictionary is empty" << endl;
+            return;
+        }
+
+        record<E>* current = head;
+        cout << "Dictionary Records" << endl;
+        cout << "KEY\tINFO" << endl;
+        while (current != NIL) {
+            cout << current->key << "\t" << current->info << endl;
+            current = current->next;
         }
     }
-
-    void remove(int key)
-    {
-        int i = search_index(key, 0, size - 1);
-        for (int j = i; j < size - 1; j++)
-            records[j] = records[j + 1];
-        --size;
-
-        if (size < capacity / 2)
-            resize(false);
-    }
 };
-
 Dictionary<string> global_dict;
 
 void menu_pretty_print()
@@ -169,7 +149,7 @@ void menu_insert_input()
     cout << "Insert the Info Value: ";
     getline(cin, info);
 
-    global_dict.insert(info, key);
+    global_dict.insert(info,key);
 }
 void menu_insert_option()
 {
@@ -214,7 +194,7 @@ string menu_find_input()
 void menu_find_option()
 {
     string info = menu_find_input();
-    cout << "Info" << info << endl;
+    cout << "Info"<< info << endl;
     string x;
     cin >> x;
 }
@@ -289,41 +269,21 @@ void menu()
 
 int main()
 {
-    /*
-    Dictionary<string> dict;
+    /*Dictionary<string> dict;
+    dict.insert("Alice", 1);
+    dict.insert("Bob", 2);
+    dict.insert("Charlie", 3);
 
-    // Insert some records into the dictionary
-    dict.insert(1, "Hello");
-    dict.insert(2, "World");
-    dict.insert(3, "C++");
-
-    // Display all records
-    cout << "Dictionary records:" << endl;
     dict.display();
 
-    // Search for a record with key 2
-    record<string> *found = dict.search(2);
-    if (found)
-    {
-        cout << "Found: Info = " << found->info << ", Key = " << found->key << endl;
-    }
-    else
-    {
-        cout << "Not found!" << endl;
-    }
+    cout<< dict.search(3)<<endl;
+    cout<< dict.search(1)<<endl;
 
-    // Remove a record
-    dict.remove(2);
-    cout << "After removal:" << endl;
-    dict.display();
-    dict.remove(1);
-    cout << "After removal:" << endl;
-    dict.display();
     dict.remove(3);
-    cout << "After removal:" << endl;
     dict.display();
-    */
 
+    cout << "Deleting dictionary..." << endl;
+    */
     menu();
     return 0;
 }
