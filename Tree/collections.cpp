@@ -36,24 +36,6 @@ class Tree
 {
 private:
     Node<E> *root;
-    // Helper function for inserting a Node
-    Node<E> *insert_aux(Node<E> *current, E value, Node<E> *parent)
-    {
-        if (current == nullptr)
-        {
-            return new Node<E>(value, parent);
-        }
-
-        if (value < current->info)
-        {
-            current->left = insert_aux(current->left, value, current);
-        }
-        else
-        {
-            current->right = insert_aux(current->right, value, current);
-        }
-        return current;
-    }
 
     // Helper function to find the minimum Node in a subtree
     Node<E> *findMin(Node<E> *current)
@@ -173,9 +155,41 @@ public:
         destroy_tree_aux(root);
     }
 
-    void insert(E value)
+    void insert(E value, E parentValue, bool isLeft)
     {
-        root = insert_aux(root, value, nullptr);
+        // If the tree is empty, make this node the root
+        if (root == nullptr)
+        {
+            root = new Node<E>(value, nullptr);
+            return;
+        }
+
+        // Find the parent node
+        Node<E> *parent = find_node(root, parentValue);
+        if (!parent)
+        {
+            cout << "Parent node " << parentValue << " not found!\n";
+            return;
+        }
+
+        // Check if the position is already occupied
+        if (isLeft && parent->left != nullptr)
+        {
+            cout << "Error: Parent " << parentValue << " already has a left child!\n";
+            return;
+        }
+        if (!isLeft && parent->right != nullptr)
+        {
+            cout << "Error: Parent " << parentValue << " already has a right child!\n";
+            return;
+        }
+
+        // Create and attach the new node
+        Node<E> *newNode = new Node<E>(value, parent);
+        if (isLeft)
+            parent->left = newNode;
+        else
+            parent->right = newNode;
     }
 
     void remove(E value)
@@ -227,54 +241,62 @@ int main()
 {
     Tree<int> tree;
 
-    // Insert elements
-    cout << "Inserting elements: 50, 30, 70, 20, 40, 60, 80\n";
-    tree.insert(50);
-    tree.insert(30);
-    tree.insert(70);
-    tree.insert(20);
-    tree.insert(40);
-    tree.insert(60);
-    tree.insert(80);
+    // Insert root node
+    cout << "Inserting root: 50\n";
+    tree.insert(50, -1, true); // Root node
 
-    // Display elements (In-order Traversal)
-    cout << "In-order Traversal: ";
-    tree.display();
+    // Manually inserting nodes with specified parents
+    cout << "Inserting 30 as left child of 50\n";
+    tree.insert(30, 50, true);
+
+    cout << "Inserting 70 as right child of 50\n";
+    tree.insert(70, 50, false);
+
+    cout << "Inserting 20 as left child of 30\n";
+    tree.insert(20, 30, true);
+
+    cout << "Inserting 40 as right child of 30\n";
+    tree.insert(40, 30, false);
+
+    cout << "Inserting 60 as left child of 70\n";
+    tree.insert(60, 70, true);
+
+    cout << "Inserting 80 as right child of 70\n";
+    tree.insert(80, 70, false);
 
     // Display tree structure
-    cout << "\nTree Structure:\n";
+    cout << "\nCurrent Tree Structure:\n";
     tree.displayTree();
 
-    // Remove a Node (leaf, Node with one child, and Node with two children)
-    cout << "\nRemoving 20 (leaf Node)...\n";
+    // Remove nodes
+    cout << "\nRemoving 20 (leaf node)...\n";
     tree.remove(20);
-    tree.display();
     tree.displayTree();
 
-    cout << "\nRemoving 30 (Node with one child)...\n";
+    cout << "\nRemoving 30 (node with one child)...\n";
     tree.remove(30);
-    tree.display();
     tree.displayTree();
 
-    cout << "\nRemoving 50 (Node with two children)...\n";
+    cout << "\nRemoving 50 (node with two children)...\n";
     tree.remove(50);
-    tree.display();
     tree.displayTree();
 
-    // Checking the father function
-    cout << "\nChecking parent of node 40:\n";
-    Node<int> *parent40 = tree.father(40);
-    if (parent40)
-        cout << "Parent of 40: " << parent40->info << endl;
+    // Checking the parent function
+    int target = 40;
+    cout << "\nChecking parent of node " << target << ":\n";
+    Node<int> *parent = tree.father(target);
+    if (parent)
+        cout << "Parent of " << target << ": " << parent->info << endl;
     else
-        cout << "40 has no parent (root node or not in tree)." << endl;
+        cout << target << " has no parent (root node or not in tree)." << endl;
 
     // Checking the son function
-    cout << "\nChildren of node 70:\n";
-    Cell<Node<int> *> *children = tree.son(70);
+    int parentNode = 70;
+    cout << "\nChildren of node " << parentNode << ":\n";
+    Cell<Node<int> *> *children = tree.son(parentNode);
     if (children)
     {
-        cout << "Children of 70: ";
+        cout << "Children of " << parentNode << ": ";
         while (children)
         {
             cout << children->info->info << " ";
@@ -284,7 +306,8 @@ int main()
     }
     else
     {
-        cout << "70 has no children." << endl;
+        cout << parentNode << " has no children." << endl;
     }
+
     return 0;
 }
