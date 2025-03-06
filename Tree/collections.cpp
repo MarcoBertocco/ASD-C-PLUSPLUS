@@ -40,7 +40,7 @@ private:
     // Helper function to find the minimum Node in a subtree
     Node<E> *findMin(Node<E> *current)
     {
-        while (current && current->left != nullptr)
+        while (current && current->left != NIL)
         {
             current = current->left;
         }
@@ -50,7 +50,7 @@ private:
     // Helper function for deletion
     Node<E> *remove_aux(Node<E> *current, E value)
     {
-        if (current == nullptr)
+        if (current == NIL)
             return current;
 
         if (value < current->info)
@@ -67,7 +67,7 @@ private:
         }
         else
         {
-            if (current->left == nullptr)
+            if (current->left == NIL)
             {
                 Node<E> *temp = current->right;
                 if (temp)
@@ -75,7 +75,7 @@ private:
                 delete current;
                 return temp;
             }
-            else if (current->right == nullptr)
+            else if (current->right == NIL)
             {
                 Node<E> *temp = current->left;
                 if (temp)
@@ -107,7 +107,7 @@ private:
     // Helper function to display the tree structure
     void display_tree_aux(Node<E> *current, int space)
     {
-        if (current == nullptr)
+        if (current == NIL)
             return;
 
         space += 5;
@@ -139,7 +139,7 @@ private:
 
     Node<E> *find_node(Node<E> *current, E value)
     {
-        if (current == nullptr || current->info == value)
+        if (current == NIL || current->info == value)
             return current;
         if (value < current->info)
             return find_node(current->left, value);
@@ -158,9 +158,9 @@ public:
     void insert(E value, E parentValue, bool isLeft)
     {
         // If the tree is empty, make this node the root
-        if (root == nullptr)
+        if (root == NIL)
         {
-            root = new Node<E>(value, nullptr);
+            root = new Node<E>(value, NIL);
             return;
         }
 
@@ -173,12 +173,12 @@ public:
         }
 
         // Check if the position is already occupied
-        if (isLeft && parent->left != nullptr)
+        if (isLeft && parent->left != NIL)
         {
             cout << "Error: Parent " << parentValue << " already has a left child!\n";
             return;
         }
-        if (!isLeft && parent->right != nullptr)
+        if (!isLeft && parent->right != NIL)
         {
             cout << "Error: Parent " << parentValue << " already has a right child!\n";
             return;
@@ -211,16 +211,16 @@ public:
     Node<E> *father(E value)
     {
         Node<E> *found = find_node(root, value);
-        return (found != nullptr) ? found->parent : nullptr;
+        return (found != NIL) ? found->parent : NIL;
     }
 
     Cell<Node<E> *> *son(E value)
     {
         Node<E> *found = find_node(root, value);
         if (!found)
-            return nullptr;
+            return NIL;
 
-        Cell<Node<E> *> *l = nullptr;
+        Cell<Node<E> *> *l = NIL;
         if (found->left)
         {
             Cell<Node<E> *> *temp = new Cell<Node<E> *>(found->left);
