@@ -1,20 +1,7 @@
 #include <iostream>
-#include <stdlib.h>
-#include <sstream>
+#include <list>
 using namespace std;
 #define NIL nullptr
-template <class E>
-struct Cell
-{
-    E info;
-    Cell<E> *next;
-
-    Cell() : info(), next(NIL) {}
-
-    Cell(const E &info_) : info(info_), next(NIL) {}
-
-    ~Cell() {}
-};
 
 template <class E>
 struct Node
@@ -37,7 +24,6 @@ class Tree
 private:
     Node<E> *root;
 
-    // Helper function to find the minimum Node in a subtree
     Node<E> *findMin(Node<E> *current)
     {
         while (current && current->left != NIL)
@@ -47,7 +33,6 @@ private:
         return current;
     }
 
-    // Helper function for deletion
     Node<E> *remove_aux(Node<E> *current, E value)
     {
         if (current == NIL)
@@ -57,13 +42,13 @@ private:
         {
             current->left = remove_aux(current->left, value);
             if (current->left)
-                current->left->parent = current; // Fix parent pointer
+                current->left->parent = current;
         }
         else if (value > current->info)
         {
             current->right = remove_aux(current->right, value);
             if (current->right)
-                current->right->parent = current; // Fix parent pointer
+                current->right->parent = current;
         }
         else
         {
@@ -71,7 +56,7 @@ private:
             {
                 Node<E> *temp = current->right;
                 if (temp)
-                    temp->parent = current->parent; // Fix parent pointer
+                    temp->parent = current->parent;
                 delete current;
                 return temp;
             }
@@ -79,7 +64,7 @@ private:
             {
                 Node<E> *temp = current->left;
                 if (temp)
-                    temp->parent = current->parent; // Fix parent pointer
+                    temp->parent = current->parent;
                 delete current;
                 return temp;
             }
@@ -88,12 +73,11 @@ private:
             current->info = temp->info;
             current->right = remove_aux(current->right, temp->info);
             if (current->right)
-                current->right->parent = current; // Fix parent pointer
+                current->right->parent = current;
         }
         return current;
     }
 
-    // Helper function for in-order traversal
     void inorder(Node<E> *current)
     {
         if (current)
@@ -104,7 +88,6 @@ private:
         }
     }
 
-    // Helper function to display the tree structure
     void display_tree_aux(Node<E> *current, int space)
     {
         if (current == NIL)
@@ -147,7 +130,6 @@ private:
     }
 
 public:
-    // Constructor
     Tree() : root(NIL) {}
 
     ~Tree()
@@ -157,14 +139,12 @@ public:
 
     void insert(E value, E parentValue, bool isLeft)
     {
-        // If the tree is empty, make this node the root
         if (root == NIL)
         {
             root = new Node<E>(value, NIL);
             return;
         }
 
-        // Find the parent node
         Node<E> *parent = find_node(root, parentValue);
         if (!parent)
         {
@@ -172,7 +152,6 @@ public:
             return;
         }
 
-        // Check if the position is already occupied
         if (isLeft && parent->left != NIL)
         {
             cout << "Error: Parent " << parentValue << " already has a left child!\n";
@@ -184,7 +163,6 @@ public:
             return;
         }
 
-        // Create and attach the new node
         Node<E> *newNode = new Node<E>(value, parent);
         if (isLeft)
             parent->left = newNode;
@@ -214,38 +192,28 @@ public:
         return (found != NIL) ? found->parent : NIL;
     }
 
-    Cell<Node<E> *> *son(E value)
+    list<Node<E> *> son(E value)
     {
         Node<E> *found = find_node(root, value);
-        if (!found)
-            return NIL;
-
-        Cell<Node<E> *> *l = NIL;
-        if (found->left)
+        list<Node<E> *> children;
+        if (found)
         {
-            Cell<Node<E> *> *temp = new Cell<Node<E> *>(found->left);
-            temp->next = l;
-            l = temp;
+            if (found->left)
+                children.push_back(found->left);
+            if (found->right)
+                children.push_back(found->right);
         }
-        if (found->right)
-        {
-            Cell<Node<E> *> *temp = new Cell<Node<E> *>(found->right);
-            temp->next = l;
-            l = temp;
-        }
-        return l;
+        return children;
     }
 };
 
-int main()
+/*int main()
 {
     Tree<int> tree;
 
-    // Insert root node
     cout << "Inserting root: 50\n";
-    tree.insert(50, -1, true); // Root node
+    tree.insert(50, -1, true);
 
-    // Manually inserting nodes with specified parents
     cout << "Inserting 30 as left child of 50\n";
     tree.insert(30, 50, true);
 
@@ -264,11 +232,9 @@ int main()
     cout << "Inserting 80 as right child of 70\n";
     tree.insert(80, 70, false);
 
-    // Display tree structure
     cout << "\nCurrent Tree Structure:\n";
     tree.displayTree();
 
-    // Remove nodes
     cout << "\nRemoving 20 (leaf node)...\n";
     tree.remove(20);
     tree.displayTree();
@@ -281,7 +247,6 @@ int main()
     tree.remove(50);
     tree.displayTree();
 
-    // Checking the parent function
     int target = 40;
     cout << "\nChecking parent of node " << target << ":\n";
     Node<int> *parent = tree.father(target);
@@ -290,17 +255,15 @@ int main()
     else
         cout << target << " has no parent (root node or not in tree)." << endl;
 
-    // Checking the son function
     int parentNode = 70;
     cout << "\nChildren of node " << parentNode << ":\n";
-    Cell<Node<int> *> *children = tree.son(parentNode);
-    if (children)
+    list<Node<int> *> children = tree.son(parentNode);
+    if (!children.empty())
     {
         cout << "Children of " << parentNode << ": ";
-        while (children)
+        for (Node<int> *child : children)
         {
-            cout << children->info->info << " ";
-            children = children->next;
+            cout << child->info << " ";
         }
         cout << endl;
     }
@@ -309,5 +272,132 @@ int main()
         cout << parentNode << " has no children." << endl;
     }
 
+    return 0;
+}*/
+
+Tree<string> global_tree;
+
+void clear_screen()
+{
+    cout << "\033[2J\033[H"; // ANSI escape code for clearing screen
+}
+
+void menu_pretty_print()
+{
+    clear_screen();
+    cout << "Menu:\n";
+    cout << "a) Insert a Node\n";
+    cout << "b) Delete a Node\n";
+    cout << "c) Print the Tree (list format)\n";
+    cout << "d) Print the Tree (hierarchical format)\n";
+    cout << "q) Quit\n";
+}
+
+void menu_insert_option()
+{
+    string parent, info, isleft;
+    clear_screen();
+    cout << "OPTION: Insert a Node\n";
+    cout << "Insert the Parent Node Value (-1 for root): ";
+    cin >> parent;
+
+    cout << "Insert the 'LEFT' OR 'RIGHT' Value: ";
+    cin >> isleft;
+
+    cin.ignore();
+    cout << "Insert the Info Value: ";
+    getline(cin, info);
+
+    if (isleft.substr(0, 0) == "LEFT")
+    {
+        global_tree.insert(info, parent, true);
+    }
+    else
+    {
+        global_tree.insert(info, parent, false);
+    }
+}
+
+void menu_delete_option()
+{
+    string node;
+    clear_screen();
+    cout << "OPTION: Delete a Node\n";
+    cout << "Insert the Node Value: ";
+    cin >> node;
+    global_tree.remove(node);
+}
+
+void menu_print_option()
+{
+    clear_screen();
+    cout << "OPTION: Print the Tree\n";
+    cout << "Tree structure (list format):\n";
+    global_tree.display();
+    cout << "\nPress Enter to continue...";
+    cin.ignore();
+    cin.get();
+}
+
+void menu_pretty_print_option()
+{
+    clear_screen();
+    cout << "OPTION: Print the Tree\n";
+    cout << "Tree structure (hierarchical format):\n";
+    global_tree.display();
+    cout << "\nPress Enter to continue...";
+    cin.ignore();
+    cin.get();
+}
+bool menu_selection(char s)
+{
+    switch (s)
+    {
+    case 'a':
+        menu_insert_option();
+        break;
+    case 'b':
+        menu_delete_option();
+        break;
+    case 'c':
+        menu_print_option();
+        break;
+    case 'd':
+        menu_pretty_print_option();
+        break;
+    case 'q':
+        return false;
+    }
+    return true;
+}
+
+char menu_input()
+{
+    char c;
+    string inputs = "abcdq";
+    do
+    {
+        menu_pretty_print();
+        string input;
+        cout << "Insert an option: ";
+        cin >> input;
+        c = input[0];
+    } while (inputs.find(c) == string::npos);
+    return c;
+}
+
+void menu()
+{
+    bool quit = true;
+    do
+    {
+        quit = menu_selection(menu_input());
+    } while (quit);
+    clear_screen();
+}
+
+int main()
+{
+    menu();
     return 0;
 }

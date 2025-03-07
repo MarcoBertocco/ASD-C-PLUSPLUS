@@ -1,20 +1,10 @@
 #include <iostream>
 #include <stdlib.h>
 #include <sstream>
+#include <list>
+
 using namespace std;
 #define NIL nullptr
-template <class E>
-struct cell
-{
-    E info;
-    cell<E> *next;
-
-    cell() : info(), next(NIL) {}
-
-    cell(const E &info_) : info(info_), next(NIL) {}
-
-    ~cell() {}
-};
 
 template <class E>
 struct Node
@@ -33,51 +23,33 @@ template <class E>
 class Tree
 {
 private:
-    Node<E> *arrayNodes;
-    size_t size;
+    Node<E> *P;
+    size_t size = 0;
     size_t capacity;
 
     void resize(bool increase = true)
     {
         size_t newCapacity = increase ? (capacity == 0 ? 2 : capacity * 2) : (size > 0 ? size : 1);
-        Node<E> *newNodes = new Node<E>[newCapacity];
 
+        Node<E> *newNodes = new Node<E>[newCapacity];
         for (size_t i = 0; i < size; i++)
         {
-            newNodes[i] = arrayNodes[i];
+            newNodes[i] = P[i];
         }
-
-        delete[] arrayNodes;
-        arrayNodes = newNodes;
+        delete[] P;
+        P = newNodes;
         capacity = newCapacity;
-    }
-
-    void removeSubtree(int v)
-    {
-        for (int i = 0; i < size; i++)
-        {
-            if (arrayNodes[i].parent == v)
-            {
-                removeSubtree(i);
-            }
-        }
-
-        for (int i = v; i < size - 1; i++)
-        {
-            arrayNodes[i] = arrayNodes[i + 1];
-        }
-        size--;
     }
 
     void displayRecursive(int v, int depth)
     {
         for (int i = 0; i < depth; i++)
-            cout << "  "; // Indentation for hierarchy
-        cout << arrayNodes[v].info << endl;
+            cout << "  ";
+        cout << P[v].info << endl;
 
-        for (int i = 0; i < size; i++)
+        for (size_t i = 0; i < size; i++)
         {
-            if (arrayNodes[i].parent == v)
+            if (P[i].parent == v)
             {
                 displayRecursive(i, depth + 1);
             }
@@ -86,32 +58,28 @@ private:
 
 public:
     // Constructor
-    Tree() : arrayNodes(NIL), size(0), capacity(0) {}
+    Tree() : P(NIL), size(0), capacity(0) {}
 
-    // Destructor
     ~Tree()
     {
-        delete[] arrayNodes;
+        delete[] P;
     }
 
     Node<E> *father(int v)
     {
-        if (arrayNodes[v].parent == -1)
+        if (v < 0 || v >= size || P[v].parent == -1)
             return NIL;
-        else
-            return &arrayNodes[v].parent;
+        return &P[P[v].parent];
     }
 
-    cell<int> *son(int v)
+    list<int> son(int v)
     {
-        cell<int> *l = NIL;
-        for (int i = 0; i < size; i++)
+        list<int> l;
+        for (size_t i = 0; i < size; i++)
         {
-            if (arrayNodes[i].parent == v)
+            if (P[i].parent == v)
             {
-                cell<int> *p = new cell<int>(i);
-                p->next = l;
-                l = p;
+                l.push_back(i);
             }
         }
         return l;
@@ -121,8 +89,7 @@ public:
     {
         if (size == capacity)
             resize();
-
-        arrayNodes[size] = Node<E>(content, parentIndex);
+        P[size] = Node<E>(content, parentIndex);
         size++;
     }
 
@@ -130,22 +97,37 @@ public:
     {
         if (v < 0 || v >= size)
             return;
-        removeSubtree(v);
+
+        int parent = P[v].parent;
+
+        for (size_t i = 0; i < size; i++)
+        {
+            if (P[i].parent == v)
+            {
+                P[i].parent = parent;
+            }
+        }
+
+        for (int i = v; i < size - 1; i++)
+        {
+            P[i] = P[i + 1];
+        }
+        size--;
     }
 
     void display()
     {
         for (size_t i = 0; i < size; i++)
         {
-            cout << "Node " << i << ": Info = " << arrayNodes[i].info << ", Parent = " << arrayNodes[i].parent << endl;
+            cout << "Node " << i << ": Info = " << P[i].info << ", Parent = " << P[i].parent << endl;
         }
     }
 
     void displayTree()
     {
-        for (int i = 0; i < size; i++)
+        for (size_t i = 0; i < size; i++)
         {
-            if (arrayNodes[i].parent == -1)
+            if (P[i].parent == -1)
             {
                 displayRecursive(i, 0);
             }
@@ -306,8 +288,7 @@ int main()
     /*
     Tree<string> tree;
 
-    // Insert arrayNodes
-    tree.insert("A", -1); // Root
+    tree.insert("A", -1);
     tree.insert("B", 0);
     tree.insert("C", 0);
     tree.insert("D", 0);
@@ -317,19 +298,25 @@ int main()
     tree.insert("H", 6);
     tree.insert("I", 6);
 
-    cout << "Tree structure (list format):" << endl;
-    tree.display();
+    cout << "Father of Node 3 (D): ";
+    Node<string> *f = tree.father(3);
+    if (f)
+        cout << f->info << endl;
+    else
+        cout << "None" << endl;
+
+    cout << "Children of Node 1 (B): ";
+    list<int> children = tree.son(1);
+    for (int child : children)
+    {
+        cout << tree.son(child).size() << " ";
+    }
     cout << endl;
 
-    cout << "Tree structure (hierarchical format):" << endl;
-    tree.displayTree();
-    cout << endl;
-
-    cout << "Removing Node 3 (D)..." << endl;
-    tree.remove(3);
+    cout << "Removing Node 6 (G)..." << endl;
+    tree.remove(6);
     tree.displayTree();
     */
-
     menu();
     return 0;
 }
