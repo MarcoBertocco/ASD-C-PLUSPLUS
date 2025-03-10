@@ -115,14 +115,6 @@ public:
         size--;
     }
 
-    void display()
-    {
-        for (size_t i = 0; i < size; i++)
-        {
-            cout << "Node " << i << ": Info = " << P[i].info << ", Parent = " << P[i].parent << endl;
-        }
-    }
-
     void displayTree()
     {
         for (size_t i = 0; i < size; i++)
@@ -204,15 +196,7 @@ void menu_delete_option()
 {
     menu_delete_input();
 }
-void menu_print_option()
-{
-    string x;
-    system("clear");
-    cout << "OPTION: Print the Tree" << endl;
-    cout << "Tree structure (list format):" << endl;
-    global_tree.display();
-    cin >> x;
-}
+
 void menu_pretty_print_option()
 {
     string x;
@@ -239,12 +223,6 @@ bool menu_selection(char s)
         break;
     }
     case 'c':
-    {
-        system("clear");
-        menu_print_option();
-        break;
-    }
-    case 'd':
     {
         system("clear");
         menu_pretty_print_option();

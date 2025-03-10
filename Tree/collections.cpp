@@ -78,16 +78,6 @@ private:
         return current;
     }
 
-    void inorder(Node<E> *current)
-    {
-        if (current)
-        {
-            inorder(current->left);
-            cout << current->info << " ";
-            inorder(current->right);
-        }
-    }
-
     void display_tree_aux(Node<E> *current, int space)
     {
         if (current == NIL)
@@ -137,7 +127,7 @@ public:
         destroy_tree_aux(root);
     }
 
-    void insert(E value, E parentValue, bool isLeft)
+    void insert(E value, E parentValue = NIL, bool isLeft = false)
     {
         if (root == NIL)
         {
@@ -145,40 +135,26 @@ public:
             return;
         }
 
-        Node<E> *parent = find_node(root, parentValue);
-        if (!parent)
+        if (parentValue)
         {
-            cout << "Parent node " << parentValue << " not found!\n";
-            return;
-        }
+            Node<E> *parent = find_node(root, parentValue);
+            if (!parent || isLeft && parent->left != NIL || !isLeft && parent->right != NIL)
+            {
+                cout << "Error: Parent " << parentValue << " not found or already has R/L child!\n";
+                return;
+            }
 
-        if (isLeft && parent->left != NIL)
-        {
-            cout << "Error: Parent " << parentValue << " already has a left child!\n";
-            return;
+            Node<E> *newNode = new Node<E>(value, parent);
+            if (isLeft)
+                parent->left = newNode;
+            else
+                parent->right = newNode;
         }
-        if (!isLeft && parent->right != NIL)
-        {
-            cout << "Error: Parent " << parentValue << " already has a right child!\n";
-            return;
-        }
-
-        Node<E> *newNode = new Node<E>(value, parent);
-        if (isLeft)
-            parent->left = newNode;
-        else
-            parent->right = newNode;
     }
 
     void remove(E value)
     {
         root = remove_aux(root, value);
-    }
-
-    void display()
-    {
-        inorder(root);
-        cout << endl;
     }
 
     void displayTree()
@@ -288,8 +264,7 @@ void menu_pretty_print()
     cout << "Menu:\n";
     cout << "a) Insert a Node\n";
     cout << "b) Delete a Node\n";
-    cout << "c) Print the Tree (list format)\n";
-    cout << "d) Print the Tree (hierarchical format)\n";
+    cout << "c) Print the Tree (hierarchical format)\n";
     cout << "q) Quit\n";
 }
 
@@ -297,24 +272,25 @@ void menu_insert_option()
 {
     string parent, info, isleft;
     clear_screen();
+    global_tree.displayTree();
     cout << "OPTION: Insert a Node\n";
     cout << "Insert the Parent Node Value (-1 for root): ";
     cin >> parent;
 
-    cout << "Insert the 'LEFT' OR 'RIGHT' Value: ";
+    cout << "Insert the 'L' OR 'R' Value: ";
     cin >> isleft;
 
     cin.ignore();
     cout << "Insert the Info Value: ";
     getline(cin, info);
 
-    if (isleft.substr(0, 0) == "LEFT")
+    if (isleft.at(0) == 'L')
     {
         global_tree.insert(info, parent, true);
     }
     else
     {
-        global_tree.insert(info, parent, false);
+        global_tree.insert(info, parent);
     }
 }
 
@@ -328,23 +304,12 @@ void menu_delete_option()
     global_tree.remove(node);
 }
 
-void menu_print_option()
-{
-    clear_screen();
-    cout << "OPTION: Print the Tree\n";
-    cout << "Tree structure (list format):\n";
-    global_tree.display();
-    cout << "\nPress Enter to continue...";
-    cin.ignore();
-    cin.get();
-}
-
 void menu_pretty_print_option()
 {
     clear_screen();
     cout << "OPTION: Print the Tree\n";
     cout << "Tree structure (hierarchical format):\n";
-    global_tree.display();
+    global_tree.displayTree();
     cout << "\nPress Enter to continue...";
     cin.ignore();
     cin.get();
@@ -360,9 +325,6 @@ bool menu_selection(char s)
         menu_delete_option();
         break;
     case 'c':
-        menu_print_option();
-        break;
-    case 'd':
         menu_pretty_print_option();
         break;
     case 'q':
@@ -374,7 +336,7 @@ bool menu_selection(char s)
 char menu_input()
 {
     char c;
-    string inputs = "abcdq";
+    string inputs = "abcq";
     do
     {
         menu_pretty_print();
