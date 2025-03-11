@@ -2,10 +2,15 @@
 using namespace std;
 
 // Define the color of a node
-enum Color { WHITE, BLACK };
+enum Color
+{
+    WHITE,
+    BLACK
+};
 
 // Structure for a binary tree node
-struct Node {
+struct Node
+{
     Color color;
     Node *left;
     Node *right;
@@ -14,8 +19,10 @@ struct Node {
 };
 
 // Helper function to count nodes with equal white and black descendants
-pair<int, int> countDescendants(Node *node, int &count) {
-    if (!node) {
+pair<int, int> countDescendants(Node *node, int &count)
+{
+    if (!node)
+    {
         return {0, 0}; // Base case: no node, so no descendants
     }
 
@@ -30,7 +37,8 @@ pair<int, int> countDescendants(Node *node, int &count) {
     int blackDescendants = left.second + right.second + (node->color == BLACK ? 1 : 0);
 
     // If white descendants == black descendants, increment the count
-    if (whiteDescendants == blackDescendants) {
+    if (whiteDescendants == blackDescendants)
+    {
         count++;
     }
 
@@ -39,13 +47,16 @@ pair<int, int> countDescendants(Node *node, int &count) {
 }
 
 // Main function to count nodes with equal white and black descendants
-int countNodesWithEqualDescendants(Node *root) {
+int countNodesWithEqualDescendants(Node *root)
+{
     int count = 0;
-    countDescendants(root, count);
+    pair<int, int> colorsCounts = countDescendants(root, count);
+    cout << colorsCounts.first << " " << colorsCounts.second << endl;
     return count;
 }
 
-int main() {
+int main()
+{
     // Example tree construction
     Node *root = new Node(WHITE);
     root->left = new Node(BLACK);
