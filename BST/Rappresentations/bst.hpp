@@ -30,10 +30,10 @@ private:
     Tree tree_minimum_aux(Tree x);
     Tree tree_successor_aux(Tree x);
     Tree tree_predecessor_aux(Tree x);
-    void tree_insert_aux(Tree root, Tree z);
+    void tree_insert_aux(Tree &root, Tree z);
     void transplant_aux(Tree &r, Tree n, Tree v);
     void tree_delete_aux(Tree &r, Tree z);
-
+    void tree_display_aux(Tree &r, int h);
 public:
     Tree root;
     BST();
@@ -45,6 +45,8 @@ public:
     void tree_insert(int z);
     void transplant(Tree n, Tree v);
     void tree_delete(Tree z);
+    void tree_display();
+    
 };
 
 Tree build_bst_aux(std::vector<int> A, int inf, int sup, Tree parent);

@@ -19,14 +19,14 @@ Tree BST::tree_searc_aux(Tree x, int k)
 
 Tree BST::tree_maximum_aux(Tree x)
 {
-    if (x != NIL)
+    if (x->right != NIL)
         return tree_maximum_aux(x->right);
     return x;
 }
 
 Tree BST::tree_minimum_aux(Tree x)
 {
-    if (x != NIL)
+    if (x->left != NIL)
         return tree_minimum_aux(x->left);
     return x;
 }
@@ -65,7 +65,7 @@ Tree BST::tree_predecessor_aux(Tree x)
     }
 }
 
-void BST::tree_insert_aux(Tree root, Tree z)
+void BST::tree_insert_aux(Tree &root, Tree z)
 {
     Tree y = NIL;
     Tree x = root;
@@ -134,6 +134,22 @@ void BST::tree_delete_aux(Tree &r, Tree z)
     }
 }
 
+void BST::tree_display_aux(Tree &r, int h)
+{
+    if (r == NIL)
+        return;
+
+    h += 5;
+    tree_display_aux(r->right, h);
+
+    std::cout << std::endl;
+    for (int i = 5; i < h; i++)
+        std::cout << " ";
+    std::cout << r->key << "\n";
+
+    tree_display_aux(r->left, h);
+}
+
 BST::BST() : root(NIL) {}
 
 Tree BST::tree_search(int k)
@@ -141,7 +157,7 @@ Tree BST::tree_search(int k)
     return tree_searc_aux(root, k);
 }
 
-Tree BST::tree_maximum(Tree n = NIL)
+Tree BST::tree_maximum(Tree n)
 {
     if (n)
         return tree_maximum_aux(n);
@@ -149,7 +165,7 @@ Tree BST::tree_maximum(Tree n = NIL)
         return tree_maximum_aux(root);
 }
 
-Tree BST::tree_minimum(Tree n = NIL)
+Tree BST::tree_minimum(Tree n)
 {
     if (n)
         return tree_minimum_aux(n);
@@ -157,7 +173,7 @@ Tree BST::tree_minimum(Tree n = NIL)
         return tree_minimum_aux(root);
 }
 
-Tree BST::tree_successor(Tree n = NIL)
+Tree BST::tree_successor(Tree n)
 {
     if (n)
         return tree_successor_aux(n);
@@ -165,7 +181,7 @@ Tree BST::tree_successor(Tree n = NIL)
         return tree_successor_aux(root);
 }
 
-Tree BST::tree_predecessor(Tree n = NIL)
+Tree BST::tree_predecessor(Tree n)
 {
     if (n)
         return tree_predecessor_aux(n);
@@ -187,6 +203,11 @@ void BST::transplant(Tree n, Tree v)
 void BST::tree_delete(Tree z)
 {
     tree_delete_aux(root, z);
+}
+
+void BST::tree_display()
+{
+    tree_display_aux(root, 0);
 }
 
 Tree build_bst_aux(std::vector<int> A, int inf, int sup, Tree parent)
