@@ -8,28 +8,30 @@ struct Node
     Node *right;
     Node(int k, Node *sx = NIL, Node *dx = NIL) : key(k), left(sx), right(dx) {}
 };
-typedef Node *Tree;
+typedef Node *PNode;
 
-int less_height_aux(Tree n, int h)
-{
+int less_height_aux(PNode n, int &count)
+{ // RADU IS THE BEST
     if (n != NIL)
     {
-        int count_dx, count_sx;
-        count_sx = less_height_aux(n->left, h + 1);
-        count_dx = less_height_aux(n->right, h + 1);
+        int h_sx = less_height_aux(n->left, count), h_dx = less_height_aux(n->right, count);
+        int h = max(h_dx, h_sx);
 
-        return ((n->key <= h) ? 1 : 0) + count_dx + count_sx;
+        if (n->key <= h)
+            count++;
+        return h + 1;
     }
     return 0;
 }
 
-int less_height(Tree r)
+int less_height(PNode r)
 {
-    int h = 0;
-    return less_height_aux(r, h);
+    int count = 0;
+    less_height_aux(r, count);
+    return count;
 }
 
-void print_tree(Tree root, int level = 0)
+void print_tree(PNode root, int level = 0)
 {
     if (root == nullptr) // Use nullptr instead of NIL
         return;
@@ -49,7 +51,7 @@ void print_tree(Tree root, int level = 0)
 
 int main()
 {
-    Tree root = new Node(3);
+    PNode root = new Node(3);
     root->left = new Node(2);
     root->right = new Node(4);
     root->left->left = new Node(1);
