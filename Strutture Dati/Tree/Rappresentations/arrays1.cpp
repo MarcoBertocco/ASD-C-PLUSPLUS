@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <sstream>
 #include <list>
+#include <cmath>
 
 using namespace std;
 #define NIL nullptr
@@ -10,11 +11,10 @@ template <class E>
 struct Node
 {
     E info;
-    int parent;
 
-    Node() : info(), parent(-1) {}
+    Node() : info() {}
 
-    Node(const E &info_, int parent_) : info(info_), parent(parent_) {}
+    Node(const E &info_) : info(info_) {}
 
     ~Node() {}
 };
@@ -23,9 +23,10 @@ template <class E>
 class Tree
 {
 private:
-    Node<E> *P;
-    size_t size = 0;
-    size_t capacity;
+    Node<E> *P;      // Array of nodes (positional array)
+    size_t size = 0; // Number of nodes in the tree
+    size_t capacity; // Capacity of the tree (array size)
+    size_t K;        // The grade of the tree (maximum number of children per node)
 
     void resize(bool increase = true)
     {
@@ -43,22 +44,26 @@ private:
 
     void displayRecursive(int v, int depth)
     {
+        if (v >= size || v < 0)
+        {
+            return; // base case: invalid index
+        }
         for (int i = 0; i < depth; i++)
             cout << "  ";
         cout << P[v].info << endl;
 
-        for (size_t i = 0; i < size; i++)
+        int firstChildIndex = v * K + 1;
+        for (int i = 0; i < K; ++i)
         {
-            if (P[i].parent == v)
-            {
-                displayRecursive(i, depth + 1);
-            }
+            int childIndex = firstChildIndex + i;
+            if (childIndex < size)
+                displayRecursive(childIndex, depth + 1);
         }
     }
 
 public:
     // Constructor
-    Tree() : P(NIL), size(0), capacity(0) {}
+    Tree(int k_) : P(NIL), size(0), capacity(0), K(k_) {}
 
     ~Tree()
     {
@@ -67,29 +72,32 @@ public:
 
     Node<E> *father(int v)
     {
-        if (v < 0 || v >= size || P[v].parent == -1)
+        if (v <= 0 || v >= size)
             return NIL;
-        return &P[P[v].parent];
+        return &P[static_cast<int>(floor((v - 1) / K))];
     }
 
     list<int> son(int v)
     {
         list<int> l;
-        for (size_t i = 0; i < size; i++)
+        int firstChild = v * K + 1;
+        if (firstChild >= size)
         {
-            if (P[i].parent == v)
-            {
-                l.push_back(i);
-            }
+            return l;
         }
-        return l;
+        else
+        {
+            for (int i = 0; i <= K - 1; i++)
+                l.push_back(firstChild + i);
+            return l;
+        }
     }
 
-    void insert(const E &content, int parentIndex)
+    void insert(const E &content)
     {
         if (size == capacity)
             resize();
-        P[size] = Node<E>(content, parentIndex);
+        P[size] = Node<E>(content);
         size++;
     }
 
@@ -98,20 +106,11 @@ public:
         if (v < 0 || v >= size)
             return;
 
-        int parent = P[v].parent;
-
-        for (size_t i = 0; i < size; i++)
-        {
-            if (P[i].parent == v)
-            {
-                P[i].parent = parent;
-            }
-        }
-
         for (int i = v; i < size - 1; i++)
         {
             P[i] = P[i + 1];
         }
+
         size--;
     }
 
@@ -119,7 +118,7 @@ public:
     {
         for (size_t i = 0; i < size; i++)
         {
-            if (P[i].parent == -1)
+            if (father(i) == NIL) // root node
             {
                 displayRecursive(i, 0);
             }
@@ -127,7 +126,7 @@ public:
     }
 };
 
-Tree<string> global_tree;
+Tree<string> global_tree(3);
 
 void menu_pretty_print()
 {
@@ -152,24 +151,11 @@ bool validate_input(string s)
 }
 void menu_insert_input()
 {
-    int parent = 0;
     string info;
-    string input;
-    do
-    {
-        system("clear");
-        cout << "OPTION: Insert a Node" << endl;
-        cout << "Insert the Node Value: ";
-        cin >> input; // Read input as a string
-    } while (!validate_input(input));
-
-    parent = stoi(input);
-    cin.ignore();
-
     cout << "Insert the Info Value: ";
-    getline(cin, info);
+    cin >> info;
 
-    global_tree.insert(info, parent);
+    global_tree.insert(info);
 }
 void menu_insert_option()
 {
@@ -262,38 +248,51 @@ void menu()
 
 int main()
 {
-    /*
-    Tree<string> tree;
+    int k = 3; // Example: 3-ary tree
+    Tree<string> tree(k);
 
-    tree.insert("A", -1);
-    tree.insert("B", 0);
-    tree.insert("C", 0);
-    tree.insert("D", 0);
-    tree.insert("E", 1);
-    tree.insert("F", 1);
-    tree.insert("G", 3);
-    tree.insert("H", 6);
-    tree.insert("I", 6);
+    // Insert some nodes into the tree
+    tree.insert("A"); // Root
+    tree.insert("B");
+    tree.insert("C");
+    tree.insert("D");
+    tree.insert("E");
+    tree.insert("F");
+    tree.insert("G");
+    tree.insert("H");
+    tree.insert("I");
+    tree.insert("L");
+    tree.insert("M");
+    tree.insert("N");
+    tree.insert("O");
 
-    cout << "Father of Node 3 (D): ";
-    Node<string> *f = tree.father(3);
-    if (f)
-        cout << f->info << endl;
+    cout << "Tree structure (hierarchical format):\n";
+    tree.displayTree(); // This will call the recursive function to display the tree.
+
+    // Test father and son relationships
+    cout << "\nParent of node 3 (D): ";
+    Node<string> *parent = tree.father(3);
+    if (parent)
+    {
+        cout << parent->info << endl;
+    }
     else
-        cout << "None" << endl;
+    {
+        cout << "No parent found!" << endl;
+    }
 
-    cout << "Children of Node 1 (B): ";
+    cout << "\nChildren of node 1 (B): ";
     list<int> children = tree.son(1);
     for (int child : children)
     {
-        cout << tree.son(child).size() << " ";
+        cout << child << " ";
     }
     cout << endl;
 
-    cout << "Removing Node 6 (G)..." << endl;
-    tree.remove(6);
-    tree.displayTree();
-    */
-    menu();
+    // Try a delete operation
+    cout << "\nRemoving node 6 (G)...\n";
+    tree.remove(6);     // Remove the node at index 6
+    tree.displayTree(); // Show the tree again after removal
+    // menu();
     return 0;
 }

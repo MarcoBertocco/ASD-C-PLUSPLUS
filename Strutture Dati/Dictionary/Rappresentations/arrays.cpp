@@ -3,6 +3,7 @@
 #include <sstream>
 using namespace std;
 #define NIL nullptr
+
 template <class E>
 struct record
 {
@@ -16,18 +17,21 @@ struct record
     ~record() {}
 };
 
+template <typename E>
+using dict = record<E>*;
+
 template <class E>
 class Dictionary
 {
 private:
-    record<E> *records;
+    dict<E> records;
     size_t size;
     size_t capacity;
 
     void resize(bool increase = true)
     {
         size_t newCapacity = increase ? (capacity == 0 ? 2 : capacity * 2) : (size > 0 ? size : 1);
-        record<E> *newRecords = new record<E>[newCapacity]; // Use `new` instead of `malloc`
+        dict<E>newRecords = new record<E>[newCapacity]; // Use `new` instead of `malloc`
 
         for (size_t i = 0; i < size; i++)
         {
@@ -99,6 +103,12 @@ public:
 
     void display() const
     {
+        if (size == 0)
+        {
+            cout << "Dictionary is empty.\n";
+            return;
+        }
+
         for (size_t i = 0; i < size; ++i)
         {
             cout << "Record " << i + 1 << ": Info = " << records[i].info << ", Key = " << records[i].key << endl;
