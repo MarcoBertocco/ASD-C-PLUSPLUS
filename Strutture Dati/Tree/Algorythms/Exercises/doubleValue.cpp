@@ -26,6 +26,18 @@ void transform_double_value(Tree u)
     }
 }
 
+void transform_double_value_revised(Tree u, int level = 0)
+{
+    if (u != NIL)
+    {
+        if (level % 2 == 0)
+        {
+            u->key = u->key * 2;
+        }
+        transform_double_value_revised(u->left_child, level + 1);
+        transform_double_value_revised(u->right_sib, level);
+    }
+}
 void print_tree(Tree root, int level = 0)
 {
     if (root == NIL)
@@ -57,7 +69,14 @@ int main()
     // Print the tree structure
     cout << "Tree Structure:" << endl;
     print_tree(root);
+
     transform_double_value(root);
+
+    cout << "Tree Structure:" << endl;
+    print_tree(root);
+
+    transform_double_value_revised(root);
+
     cout << "Tree Structure:" << endl;
     print_tree(root);
     return 0;
