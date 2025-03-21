@@ -52,10 +52,10 @@ void merge_sort(vector<int> &A, int p, int r) // 2T(n/2) + O(n) -> O(nlog(n))
 
 int main()
 {
-    int arr[] = {33, 13, 14, 22, 31, 52, 18, 2, 1, 3, 5};
+    int arr[] = {100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5};
     vector<int> vettore(arr, arr + sizeof(arr) / sizeof(arr[0]));
 
-    // Complessità di Merge:O(n) MergeSort: O(nlog(n))
+    // Complessità di MergeSort: O(nlog(n))
     merge_sort(vettore, 0, vettore.size() - 1);
     for (int i = 0; i < vettore.size(); i++)
         cout << vettore[i] << " ";

@@ -39,7 +39,7 @@ void quick_sort_rand(vector<int> &A, int p, int r) // Expected: O(n log(n)), Wor
 }
 int main()
 {
-    int arr[] = {33, 13, 14, 22, 31, 52, 18, 2, 1, 3, 5};
+    int arr[] = {100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5};
     vector<int> vettore(arr, arr + sizeof(arr) / sizeof(arr[0]));
 
     // Complessità quick_sort_rand: Expected O(n log(n)), Worst O(n^2) (rare)

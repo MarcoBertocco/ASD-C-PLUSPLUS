@@ -31,7 +31,7 @@ void quick_sort(vector<int> &A, int p, int r) // O(n^2)
 }
 int main()
 {
-    int arr[] = {33, 13, 14, 22, 31, 52, 18, 2, 1, 3, 5};
+    int arr[] = {100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5};
     vector<int> vettore(arr, arr + sizeof(arr) / sizeof(arr[0]));
 
     // Complessità quick_sort O(n^2)
