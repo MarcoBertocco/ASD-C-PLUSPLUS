@@ -3,6 +3,16 @@
 #include <cmath>
 using namespace std;
 
+void display(vector<int> A)
+{
+    cout << "[";
+    for (int i = 0; i < A.size(); i++)
+    {
+        cout << A[i] << " ";
+    }
+    cout << "]" << endl;
+}
+
 int partition(vector<int> &A, int p, int r) // O(n)
 {
     int x = A[r], i = p - 1;
