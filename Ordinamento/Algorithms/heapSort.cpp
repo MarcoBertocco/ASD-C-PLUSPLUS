@@ -50,9 +50,8 @@ void max_heapify(vector<int> &A, int heap_size, int i) // T(n) = O(h) = O(log n)
     }
 }
 
-void build_max_heap(vector<int> &A) // O(n)
+void build_max_heap(vector<int> &A, int heap_size) // O(n)
 {
-    int heap_size = A.size();
     for (int i = heap_size / 2 - 1; i >= 0; i--) // O(n/2)
     {
         max_heapify(A, heap_size, i); // O(log n)
@@ -62,7 +61,7 @@ void build_max_heap(vector<int> &A) // O(n)
 void heap_sort(vector<int> &A)
 {
     int heap_size = A.size();
-    build_max_heap(A);                      // O(n)
+    build_max_heap(A,heap_size);                      // O(n)
     for (int i = heap_size - 1; i > 0; i--) // O(n)
     {
         swap(A[i], A[0]); // O(1)
