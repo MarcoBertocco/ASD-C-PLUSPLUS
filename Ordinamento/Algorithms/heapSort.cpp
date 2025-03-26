@@ -28,7 +28,7 @@ int right(int i)
     return i * 2 + 2;
 }
 
-void max_heapify(vector<int> &A, int heap_size, int i)
+void max_heapify(vector<int> &A, int heap_size, int i) // O(log n) -> Traverse height of Heap
 {
     int massimo = i;
     int l = left(i);
@@ -42,43 +42,32 @@ void max_heapify(vector<int> &A, int heap_size, int i)
     {
         massimo = r;
     }
-    stampaVettore(A);
+
     if (i != massimo)
     {
         swap(A[i], A[massimo]);
-        max_heapify(A, heap_size, massimo);
+        max_heapify(A, heap_size, massimo); // Recursive call O(log n)
     }
 }
 
-void build_max_heap(vector<int> &A)
+void build_max_heap(vector<int> &A) // O(n)
 {
     int heap_size = A.size();
-    for (int i = heap_size / 2 - 1; i >= 0; i--)
+    for (int i = heap_size / 2 - 1; i >= 0; i--) // O(n/2)
     {
-        cout << "++++++++HEAPIFY+(" << i << ")+++" << endl;
-        max_heapify(A, heap_size, i);
-        cout << "+++++++++++++++++++++++" << endl;
+        max_heapify(A, heap_size, i); // O(log n)
     }
 }
 
 void heap_sort(vector<int> &A)
 {
     int heap_size = A.size();
-    cout << "---------BUILD---------" << endl;
-    build_max_heap(A);
-    cout << "-----------------------" << endl;
-    cout << "" << endl;
-    for (int i = heap_size - 1; i > 0; i--)
+    build_max_heap(A);                      // O(n)
+    for (int i = heap_size - 1; i > 0; i--) // O(n)
     {
-        swap(A[i], A[0]);
+        swap(A[i], A[0]); // O(1)
         heap_size--;
-        cout << "-----------------------" << endl;
-        stampaVettore(A);
-        cout << "-----------------------" << endl;
-
-        cout << "++++++++HEAPIFY+(" << i << ")+++" << endl;
-        max_heapify(A, heap_size, 0);
-        cout << "+++++++++++++++++++++++" << endl;
+        max_heapify(A, heap_size, 0); // O(log n)
     }
 }
 
@@ -89,6 +78,7 @@ int main()
     cout << "Vettore originale: ";
     stampaVettore(vettore);
 
+    // Complessità heap_sort O(nlog(n))
     heap_sort(vettore);
 
     cout << "Vettore ordinato: ";
