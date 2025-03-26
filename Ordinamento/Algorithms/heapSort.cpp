@@ -28,7 +28,7 @@ int right(int i)
     return i * 2 + 2;
 }
 
-void max_heapify(vector<int> &A, int heap_size, int i) // O(log n) -> Traverse height of Heap
+void max_heapify(vector<int> &A, int heap_size, int i) // T(n) = O(h) = O(log n) whr h is Height Heap
 {
     int massimo = i;
     int l = left(i);
@@ -45,8 +45,8 @@ void max_heapify(vector<int> &A, int heap_size, int i) // O(log n) -> Traverse h
 
     if (i != massimo)
     {
-        swap(A[i], A[massimo]);
-        max_heapify(A, heap_size, massimo); // Recursive call O(log n)
+        swap(A[i], A[massimo]);             // O(1)
+        max_heapify(A, heap_size, massimo); // ?
     }
 }
 
