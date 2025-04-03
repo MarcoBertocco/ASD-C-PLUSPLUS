@@ -26,9 +26,10 @@ void generic_visit(Tree root)
         if (n != NIL)
         {
             visit(n); // visit node n
-
-            stack.push_front(n->left); // S = S U {n.sons}
+            
             stack.push_front(n->right);
+            stack.push_front(n->left); // S = S U {n.sons}
+            
         }
     }
 }

@@ -42,7 +42,7 @@ void max_heapify(vector<int> &A, int heap_size, int i) // T(n) = O(h) = O(log n)
     {
         massimo = r;
     }
-
+    stampaVettore(A);
     if (i != massimo)
     {
         swap(A[i], A[massimo]);             // O(1)
@@ -52,8 +52,10 @@ void max_heapify(vector<int> &A, int heap_size, int i) // T(n) = O(h) = O(log n)
 
 void build_max_heap(vector<int> &A, int heap_size) // O(n)
 {
+    cout << "---------BUILD---------" << endl;
     for (int i = heap_size / 2 - 1; i >= 0; i--) // O(n/2)
     {
+        cout << "++++++++HEAPIFY+(" << i << ")+++" << endl;
         max_heapify(A, heap_size, i); // O(log n)
     }
 }
@@ -61,7 +63,9 @@ void build_max_heap(vector<int> &A, int heap_size) // O(n)
 void heap_sort(vector<int> &A)
 {
     int heap_size = A.size();
-    build_max_heap(A,heap_size);                      // O(n)
+    build_max_heap(A, heap_size); // O(n)
+    cout << endl;
+
     for (int i = heap_size - 1; i > 0; i--) // O(n)
     {
         swap(A[i], A[0]); // O(1)
@@ -72,7 +76,7 @@ void heap_sort(vector<int> &A)
 
 int main()
 {
-    vector<int> vettore = {16, 4, 10, 24, 7, 9, 3, 2, 8, 1};
+    vector<int> vettore = {16, 4, 10, 14, 7, 9, 3, 2, 8, 1, 100};
 
     cout << "Vettore originale: ";
     stampaVettore(vettore);
