@@ -4,7 +4,7 @@ using namespace std;
 
 void insertion_sort(vector<int> &A) // O(n^2)
 {
-    for (int j = 1; j < A.size(); j++) // n volte
+    for (int j = 1; j <= A.size()-1; j++) // n volte
     {
         int k = A[j], i = j - 1;
         while (i >= 0 && k < A[i]) // n volte
