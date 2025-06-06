@@ -14,16 +14,16 @@ int intermedi_rec(PNodeG u, int somma, int &nMedi)
 {
     if (u != nullptr)
     {
-        int x = 0, y = 0;
+        int leftSub = 0, rightSibs = 0;
         if (u->right_sib != nullptr || u->left_child != nullptr)
         {
-            x = intermedi_rec(u->left_child, somma + u->key, nMedi);
-            y = intermedi_rec(u->right_sib, somma, nMedi);
+            leftSub = intermedi_rec(u->left_child, somma + u->key, nMedi);
+            rightSibs = intermedi_rec(u->right_sib, somma, nMedi);
         }
-        // cout << "(" << u->key << ") SUM: " << somma << " L: " << x << " Rs: " << y << endl;
-        if (x + u->key == somma)
+        //cout << "(" << u->key << ") SUM: " << somma << " L: " << leftSub << " Rs: " << rightSibs << endl;
+        if (leftSub + u->key == somma)
             nMedi++;
-        return u->key + y + x;
+        return u->key + rightSibs + leftSub;
     }
     return 0;
 }
