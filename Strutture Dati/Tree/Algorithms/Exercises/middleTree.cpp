@@ -18,12 +18,12 @@ int intermedi_rec(PNodeG u, int somma, int &nMedi)
         if (u->right_sib != nullptr || u->left_child != nullptr)
         {
             x = intermedi_rec(u->left_child, somma + u->key, nMedi);
-            y = intermedi_rec(u->right_sib, somma + u->key, nMedi);
+            y = intermedi_rec(u->right_sib, somma, nMedi);
         }
-        cout << "(" << u->key << ") SUM: " << somma << " L: " << x << " Rs: " << y << endl;
-        if (x == somma)
+        // cout << "(" << u->key << ") SUM: " << somma << " L: " << x << " Rs: " << y << endl;
+        if (x + u->key == somma)
             nMedi++;
-        return x + y + u->key;
+        return u->key + y + x;
     }
     return 0;
 }
@@ -55,21 +55,38 @@ void print_tree(PNodeG root, int level = 0)
 
 int main()
 {
-    // Creating the tree structure as per the left-side diagram
-    PNodeG root = new Node(2);
+    // Giorgia Tree
+    PNodeG root = new Node(6);
     root->left_child = new Node(3);
-    root->left_child->left_child = new Node(1);
+    root->left_child->left_child = new Node(2);
     root->left_child->left_child->right_sib = new Node(1);
-    root->left_child->right_sib = new Node(5);
-    root->left_child->right_sib->left_child = new Node(2);
-    root->left_child->right_sib->right_sib = new Node(7);
-    root->left_child->right_sib->right_sib->left_child = new Node(6);
-    root->left_child->right_sib->right_sib->left_child->right_sib = new Node(4);
+    root->left_child->right_sib = new Node(4);
+    root->left_child->right_sib->right_sib = new Node(5);
+    root->left_child->right_sib->right_sib->left_child = new Node(1);
+
+    // Mine
+    PNodeG root1 = new Node(10);
+    root1->left_child = new Node(3);
+    root1->left_child->left_child = new Node(1);
+    root1->left_child->left_child->right_sib = new Node(6);
+    root1->left_child->right_sib = new Node(5);
+    root1->left_child->right_sib->left_child = new Node(2);
+    root1->left_child->right_sib->right_sib = new Node(7);
+    root1->left_child->right_sib->right_sib->left_child = new Node(2);
+    root1->left_child->right_sib->right_sib->left_child->right_sib = new Node(1);
 
     // Print the tree structure
     cout << "Tree Structure:" << endl;
     print_tree(root);
 
-    cout << "Numero nodi intermedi: " << intermedi(root) << endl;
+    cout << "Numero nodi intermedi: \n"
+         << intermedi(root) << endl;
+
+    // Print the tree structure
+    cout << "Tree Structure:" << endl;
+    print_tree(root1);
+
+    cout << "Numero nodi intermedi: \n"
+         << intermedi(root1) << endl;
     return 0;
 }
