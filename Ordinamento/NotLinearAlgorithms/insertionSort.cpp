@@ -33,7 +33,7 @@ void insertion_sort_rec_aux(vector<int> &A, int dim)
     }
     A[j + 1] = last;
 }
-
+/*
 void insertion_sort_rec_aux1(vector<int> &A, int dim, int tmp)
 {
     if (dim == 0)
@@ -48,7 +48,7 @@ void insertion_sort_rec_aux1(vector<int> &A, int dim, int tmp)
         j--;
     }
     A[j + 1] = tmp;
-}
+}*/
 
 void insertion_sort_rec(vector<int> &A)
 {
