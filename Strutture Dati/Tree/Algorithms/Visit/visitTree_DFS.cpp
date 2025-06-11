@@ -28,14 +28,14 @@ void depth_first_search(Tree root)
 }
 
 // Deep First Search RECURSIVE
-void depth_first_search_rec(Tree n)
+void depth_first_search_rec(Tree r)
 {
-    if (n != NIL)
+    if (r != NIL)
     {
-        visit(n);
+        visit(r);
 
-        depth_first_search_rec(n->left);
-        depth_first_search_rec(n->right);
+        depth_first_search_rec(r->left);
+        depth_first_search_rec(r->right);
     }
 }
 
