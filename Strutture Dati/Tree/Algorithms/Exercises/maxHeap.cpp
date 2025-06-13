@@ -59,6 +59,33 @@ vector<int> intersezione(vector<int> h1, vector<int> h2)
 
     return res;
 }
+
+vector<int> differenza(vector<int> h1, vector<int> h2)
+{
+    vector<int> res;
+
+    while (!h1.empty() && !h2.empty())
+    {
+        cout << h1[0] << " " << h2[0] << endl;
+        if (h1[0] == h2[0])
+        {
+            extractMax(h1);
+            extractMax(h2);
+        }
+        else if (h1[0] > h2[0])
+        {
+            res.push_back(h1[0]);
+            extractMax(h1);
+        }
+        else
+        {
+            extractMax(h2);
+        }
+    }
+
+    return res;
+}
+
 void stampaVettore(const vector<int> &vettore)
 {
     for (int num : vettore)
@@ -81,5 +108,10 @@ int main()
 
     cout << "Intersezione: ";
     stampaVettore(heap3);
+
+    vector<int> heap4 = differenza(heap1, heap2);
+
+    cout << "Intersezione: ";
+    stampaVettore(heap4);
     return 0;
 }

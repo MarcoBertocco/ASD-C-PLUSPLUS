@@ -51,7 +51,7 @@ Tree BST::tree_successor_aux(Tree x)
 Tree BST::tree_predecessor_aux(Tree x)
 {
     if (x->left != NIL)
-        return tree_minimum(x->left);
+        return tree_maximum(x->left);
 
     else
     {
@@ -113,21 +113,21 @@ void BST::transplant_aux(Tree &r, Tree n, Tree v)
 void BST::tree_delete_aux(Tree &r, Tree z)
 {
     if (z->left == NIL)
-        transplant(z, z->right);
+        transplant(r,z, z->right);
     else
     {
         if (z->right == NIL)
-            transplant(z, z->left);
+            transplant(r,z, z->left);
         else
         {
             Tree y = tree_minimum(z->right);
             if (y->parent != z)
             {
-                transplant(y, y->right);
+                transplant(r,y, y->right);
                 y->right = z->right;
                 z->right->parent = y;
             }
-            transplant(z, y);
+            transplant(r,z, y);
             y->left = z->left;
             y->left->parent = y;
         }
@@ -195,9 +195,9 @@ void BST::tree_insert(int z)
     tree_insert_aux(root, nodo);
 }
 
-void BST::transplant(Tree n, Tree v)
+void BST::transplant(Tree& r,Tree n, Tree v)
 {
-    transplant_aux(root, n, v);
+    transplant_aux(r, n, v);
 }
 
 void BST::tree_delete(Tree z)

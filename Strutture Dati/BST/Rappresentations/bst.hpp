@@ -43,7 +43,7 @@ public:
     Tree tree_successor(Tree n = NIL);
     Tree tree_predecessor(Tree n = NIL);
     void tree_insert(int z);
-    void transplant(Tree n, Tree v);
+    void transplant(Tree& r, Tree n, Tree v);
     void tree_delete(Tree z);
     void tree_display();
     
