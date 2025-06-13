@@ -22,7 +22,7 @@ void remove_greater_k(BST t, int k)
             iter->right = NIL;
             temp = iter;
 
-            t.transplant(iter, iter->left);
+            t.transplant(t.root, iter, iter->left);
             iter = iter->left;
             delete (temp);
         }
@@ -38,6 +38,6 @@ int main()
     vector<int> vettore(arr, arr + sizeof(arr) / sizeof(arr[0]));
     BST tree = build_bst(vettore);
 
-    remove_greater_k(tree, 55);
+    remove_greater_k(tree, 7);
     tree.tree_display();
 }
