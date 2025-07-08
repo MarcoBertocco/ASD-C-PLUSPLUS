@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 using namespace std;
-int lPalindroma_topDown_rec(string &s, vector<vector<int>> &c, int i, int j)
+int top_down_LPS_rec(string &s, vector<vector<int>> &c, int i, int j)
 {
     if (i > j)
         return 0;
@@ -22,14 +22,14 @@ int lPalindroma_topDown_rec(string &s, vector<vector<int>> &c, int i, int j)
     if (s[i] == s[j])
     {
         int len_inside = j - i - 1;
-        int rec = lPalindroma_topDown_rec(s, c, i + 1, j - 1);
+        int rec = top_down_LPS_rec(s, c, i + 1, j - 1);
         if (rec == len_inside)
             return c[i][j] = 2 + rec;
     }
-    return c[i][j] = max(lPalindroma_topDown_rec(s, c, i + 1, j), lPalindroma_topDown_rec(s, c, i, j - 1));
+    return c[i][j] = max(top_down_LPS_rec(s, c, i + 1, j), top_down_LPS_rec(s, c, i, j - 1));
 }
 
-int lPalindroma_bottomUp(string s)
+int bottom_up_LPS(string s)
 {
     int n = s.size();
     if (n == 0)
@@ -63,18 +63,18 @@ int lPalindroma_bottomUp(string s)
 
     return max_len;
 }
-int lPalindroma_topDown(string s)
+int top_down_LPS(string s)
 {
     int n = s.size();
     vector<vector<int>> c(n, vector<int>(n, -1));
-    return lPalindroma_topDown_rec(s, c, 0, n - 1);
+    return top_down_LPS_rec(s, c, 0, n - 1);
 }
 int main()
 {
 
-    cout << lPalindroma_topDown("coocking") << endl;
-    cout << lPalindroma_topDown("NYAHAHAHAHA") << endl;
+    cout << top_down_LPS("coocking") << endl;
+    cout << top_down_LPS("NYAHAHAHAHA") << endl;
 
-    cout << lPalindroma_bottomUp("coocking") << endl;
-    cout << lPalindroma_bottomUp("NYAHAHAHAHA") << endl;
+    cout << bottom_up_LPS("coocking") << endl;
+    cout << bottom_up_LPS("NYAHAHAHAHA") << endl;
 }
