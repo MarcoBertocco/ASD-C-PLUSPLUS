@@ -31,37 +31,35 @@ int top_down_LPS_rec(string &s, vector<vector<int>> &c, int i, int j)
 
 int bottom_up_LPS(string s)
 {
-    int n = s.size();
-    if (n == 0)
-        return 0;
+    int n = s.length();
+    if (n == 0) return 0;
 
     vector<vector<bool>> dp(n, vector<bool>(n, false));
-    int max_len = 1;
+    int maxLen = 1;
 
     for (int i = 0; i < n; i++)
         dp[i][i] = true;
-    for (int i = 0; i < n - 1; i++)
-    {
-        if (s[i] == s[i + 1])
-        {
-            dp[i][i + 1] = true;
-            max_len = 2;
-        }
-    }
-    for (int len = 3; len <= n; len++)
-    {
-        for (int i = 0; i <= n - len; i++)
-        {
+
+    int start = 0;
+
+    for (int len = 2; len <= n; len++) {
+        for (int i = 0; i <= n - len; i++) {
             int j = i + len - 1;
-            if (s[i] == s[j] && dp[i + 1][j - 1])
-            {
-                dp[i][j] = true;
-                max_len = len;
+
+            if (s[i] == s[j]) {
+                if (len == 2)
+                    dp[i][j] = true;
+                else
+                    dp[i][j] = dp[i + 1][j - 1];
+
+                if (dp[i][j] && len > maxLen) {
+                    maxLen = len;
+                    start = i;
+                }
             }
         }
     }
-
-    return max_len;
+    return maxLen;
 }
 int top_down_LPS(string s)
 {
