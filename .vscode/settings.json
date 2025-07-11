@@ -51,5 +51,6 @@
         "queue": "cpp",
         "ctime": "cpp",
         "iomanip": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "enabled"
 }
