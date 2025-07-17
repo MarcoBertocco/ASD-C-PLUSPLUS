@@ -20,7 +20,7 @@ int intermedi_rec(PNodeG u, int somma, int &nMedi)
             leftSub = intermedi_rec(u->left_child, somma + u->key, nMedi);
             rightSibs = intermedi_rec(u->right_sib, somma, nMedi);
         }
-        //cout << "(" << u->key << ") SUM: " << somma << " L: " << leftSub << " Rs: " << rightSibs << endl;
+        cout << "(" << u->key << ") SUM: " << somma << " L: " << leftSub << " Rs: " << rightSibs << endl;
         if (leftSub + u->key == somma)
             nMedi++;
         return u->key + rightSibs + leftSub;

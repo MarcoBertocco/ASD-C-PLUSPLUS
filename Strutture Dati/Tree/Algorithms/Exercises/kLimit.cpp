@@ -3,7 +3,7 @@
 // minore o uguale a k.
 // Scrivere una funzione efficiente in C k−limitato(u,k) che dato in input la radice u di un albero T e un
 // valore k verifica se T è k − limitato e ritorna 1 se T è k − limitato, 0 altrimenti.
-//  Valutarne la complessità, indicando eventuali relazioni di ricorrenza.
+// Valutarne la complessità, indicando eventuali relazioni di ricorrenza.
 
 #include <iostream>
 using namespace std;

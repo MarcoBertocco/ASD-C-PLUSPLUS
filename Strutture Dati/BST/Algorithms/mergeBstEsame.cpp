@@ -13,9 +13,9 @@ vector<int> mergeBST(const vector<int> &t1, const vector<int> &t2, int val)
     t[0] = val;
 
     int x = 0;
-    for (int i = 0; i < h; i++)
+    for (int i = 0; i < h; i++)//h
     {
-        for (int j = 0; j < pow(2, i); j++)
+        for (int j = 0; j < pow(2, i); j++)//2^i
         {
             // cout << i << " " << j << " " << x + pow(2, i) << " " << x + pow(2, i) * 2 << endl;
             cout << "Ciao" << endl;

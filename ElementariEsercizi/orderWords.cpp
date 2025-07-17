@@ -22,7 +22,7 @@ void countingSort(vector<string> &A, int n, int k, int i)
     {
         c[j] += c[j - 1];
     }
-   
+    
     for (int j = n - 1; j >= 0; j--)
     {
         int d = A[j][i] - 'A';

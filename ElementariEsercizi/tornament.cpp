@@ -1,5 +1,5 @@
 // Si deve organizzare una gara di programmazione. Ogni programmatore ha un punteggio che esprime la
-// sua abilità (più alto è il punteggio migliore è il programmatore). Ogni programmatore è abbinato a un
+// sua abilità (più alto è il punteggio, migliore è il programmatore). Ogni programmatore è abbinato a un
 // altro programmatore e la differenza fra i loro punteggi è detta “scarto”. Scrivere un algoritmo efficiente
 // int scarto( int n, int punteggi []) che dati n programmatori, con n pari, e i loro punteggi, restituisce il minimo
 // scarto totale (somma degli scarti delle varie coppie) che si può ottenere pianificando in modo ottimale le

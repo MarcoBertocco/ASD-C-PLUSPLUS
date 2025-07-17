@@ -72,18 +72,15 @@ bool divisionReal(double real, vector<double> v1, vector<double> v2, double &x1,
 
     for (double a : v1)
     {
-        if (a >= real)
+        for (double b : v2)
         {
-            for (double b : v2)
-            {
-                if (fabs(b) > EPSILON)
-                { // Evita divisione per zero
-                    if (fabs(a / b - real) < EPSILON)
-                    {
-                        x1 = a;
-                        x2 = b;
-                        return true;
-                    }
+            if (fabs(b) > EPSILON)
+            { // Evita divisione per zero
+                if (fabs(a / b - real) < EPSILON)
+                {
+                    x1 = a;
+                    x2 = b;
+                    return true;
                 }
             }
         }
@@ -94,8 +91,8 @@ bool divisionReal(double real, vector<double> v1, vector<double> v2, double &x1,
 int main()
 {
     double real = 3.5f;
-    vector<double> v1 = {1.0, 4.2, 5.0, 7.0, 9.1, 11.0, 13.5, 15.2, 18.8, 20.0};
-    vector<double> v2 = {1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+    vector<double> v1 = {0.35, 4.2, 5.0, 7.0, 9.1, 11.0, 13.5, 15.2, 18.8, 20.0};
+    vector<double> v2 = {0.01, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
 
     double x1 = -1.0f, x2 = -1.0f;
 

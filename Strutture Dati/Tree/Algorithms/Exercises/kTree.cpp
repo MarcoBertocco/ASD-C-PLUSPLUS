@@ -24,7 +24,6 @@ int kArio_rec(PNodeG n, int k, int &res)
     {
         int rS = kArio_rec(n->right_sib, k, res);
         int lC = kArio_rec(n->left_child, k, res);
-
         rS++;
         if (n->left_child != nullptr)
         {

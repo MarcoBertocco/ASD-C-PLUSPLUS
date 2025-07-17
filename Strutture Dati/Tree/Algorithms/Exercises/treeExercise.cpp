@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 #define NIL nullptr
+
 struct Node
 {
     int key;
@@ -10,12 +11,12 @@ struct Node
     Node(int k, Node *p, Node *sx = NIL, Node *dx = NIL) : key(k), parent(p), left(sx), right(dx) {}
 };
 typedef Node *Tree;
+
 void inOrderTraversal(Tree root){
     if(root!=NIL){
         inOrderTraversal(root->left);
         cout << root->key <<" ";
         inOrderTraversal(root->right);
-       
     }
 }
 Tree insertNode(Tree root, int key, Node *parent = NIL)
