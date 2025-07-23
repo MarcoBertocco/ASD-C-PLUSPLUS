@@ -17,19 +17,20 @@ void stampaVettore(const vector<int> &vettore)
 
 int cifra(int x, int n, int i)
 {
-    return (x / ((int)pow(n, (i - 1)))) % n;
+    return (x / (int)pow(n, i)) % n;
 }
 
-void counting_sort(vector<int> A, int k, int i)
+void counting_sort(vector<int> &A, int k, int i)
 {
-    vector<int> B(A.size(), 0); // vettore occorrenze
-    vector<int> C(k, 0);        // vettore occorrenze
+    int n = A.size();
+    vector<int> B(n, 0); // vettore
+    vector<int> C(k, 0); // vettore occorrenze
 
-    for (int j = 0; j < A.size(); j++)
+    for (int j = 0; j < n; j++)
         C[cifra(A[j], k, i)]++;
 
 #ifdef ASCENDING_ORDER // somme prefisse
-    for (int j = 0; j < k; j++)
+    for (int j = 1; j < k; j++)
         C[j] += C[j - 1];
 #endif
 
@@ -38,7 +39,7 @@ void counting_sort(vector<int> A, int k, int i)
         C[j] += C[j + 1];
 #endif
 
-    for (int j = A.size() - 1; j >= 0; j--) // ordinazione degli elementi
+    for (int j = n - 1; j >= 0; j--) // ordinazione degli elementi
     {
         int d = cifra(A[j], k, i);
         B[C[d] - 1] = A[j];
@@ -62,15 +63,11 @@ int main()
     cout << "Vettore originale: ";
     stampaVettore(vettore);
 
-    // n = size
-    // k = max_value of array + 1
-    // Complessità counting_sort O(n)
+    int d = log10(100) + 1; // number of digits
+    int k = 10;             // base 10
 
-    int max_val = *max(vettore.begin(), vettore.end());
-    int d = log10(max_val) + 1; // number of digits
-    int k = 10;                 // base 10
-
-    counting_sort(vettore, d, k);
+    // Complessità radix sort O(n)
+    radix_sort(vettore, d, k);
 
     cout << "Vettore ordinato: ";
     stampaVettore(vettore);
