@@ -94,43 +94,33 @@ void BST::tree_insert_aux(Tree &root, Tree z)
 void BST::transplant_aux(Tree &r, Tree n, Tree v)
 {
     if (n->parent == NIL)
-    {
         r = v;
-    }
+    else if (n == n->parent->left)
+        n->parent->left = v;
     else
-    {
-        if (n == n->parent->left)
-            n->parent->left = v;
-        else
-            n->parent->right = v;
-    }
+        n->parent->right = v;
 
     if (v != NIL)
-    {
         v->parent = n->parent;
-    }
 }
 void BST::tree_delete_aux(Tree &r, Tree z)
 {
     if (z->left == NIL)
-        transplant(r,z, z->right);
+        transplant(r, z, z->right);
+    else if (z->right == NIL)
+        transplant(r, z, z->left);
     else
     {
-        if (z->right == NIL)
-            transplant(r,z, z->left);
-        else
+        Tree y = tree_minimum(z->right);
+        if (y->parent != z)
         {
-            Tree y = tree_minimum(z->right);
-            if (y->parent != z)
-            {
-                transplant(r,y, y->right);
-                y->right = z->right;
-                z->right->parent = y;
-            }
-            transplant(r,z, y);
-            y->left = z->left;
-            y->left->parent = y;
+            transplant(r, y, y->right);
+            y->right = z->right;
+            z->right->parent = y;
         }
+        transplant(r, z, y);
+        y->left = z->left;
+        y->left->parent = y;
     }
 }
 
@@ -195,7 +185,7 @@ void BST::tree_insert(int z)
     tree_insert_aux(root, nodo);
 }
 
-void BST::transplant(Tree& r,Tree n, Tree v)
+void BST::transplant(Tree &r, Tree n, Tree v)
 {
     transplant_aux(r, n, v);
 }
