@@ -24,57 +24,54 @@ class Tree
 private:
     Node<E> *root;
 
-    Node<E> *findMin(Node<E> *current)
-    {
-        while (current && current->left != NIL)
-        {
-            current = current->left;
-        }
-        return current;
-    }
-
     Node<E> *remove_aux(Node<E> *current, E value)
     {
         if (current == NIL)
-            return current;
+            return NIL;
 
-        if (value < current->info)
-        {
-            current->left = remove_aux(current->left, value);
-            if (current->left)
-                current->left->parent = current;
-        }
-        else if (value > current->info)
-        {
-            current->right = remove_aux(current->right, value);
-            if (current->right)
-                current->right->parent = current;
-        }
-        else
-        {
-            if (current->left == NIL)
-            {
-                Node<E> *temp = current->right;
-                if (temp)
-                    temp->parent = current->parent;
-                delete current;
-                return temp;
-            }
-            else if (current->right == NIL)
-            {
-                Node<E> *temp = current->left;
-                if (temp)
-                    temp->parent = current->parent;
-                delete current;
-                return temp;
-            }
+        list<Node<E> *> queue;
+        queue.push_back(current);
 
-            Node<E> *temp = findMin(current->right);
-            current->info = temp->info;
-            current->right = remove_aux(current->right, temp->info);
-            if (current->right)
-                current->right->parent = current;
+        while (!queue.empty())
+        {
+            Node<E> *u = queue.front();
+            queue.pop_front();
+
+            if (u->info == value)
+            {
+                if (u->parent != NIL)
+                {
+                    if (u->parent->left == u)
+                        u->parent->left = NIL;
+                    else if (u->parent->right == u)
+                        u->parent->right = NIL;
+                }
+                else
+                    current = NIL;
+
+                if (u->left != NIL)
+                {
+                    u->left->parent = NIL;
+                    queue.push_back(u->left);
+                }
+                if (u->right != NIL)
+                {
+                    u->right->parent = NIL;
+                    queue.push_back(u->right);
+                }
+
+                delete u;
+                continue; // Skip pushing u's children again
+            }
+            else
+            {
+                if (u->left != NIL)
+                    queue.push_back(u->left);
+                if (u->right != NIL)
+                    queue.push_back(u->right);
+            }
         }
+
         return current;
     }
 
@@ -109,14 +106,29 @@ private:
             delete current;
         }
     }
-
     Node<E> *find_node(Node<E> *current, E value)
     {
-        if (current == NIL || current->info == value)
-            return current;
-        if (value < current->info)
-            return find_node(current->left, value);
-        return find_node(current->right, value);
+        if (current == NIL)
+            return NIL;
+
+        list<Node<E> *> queue;
+        queue.push_back(current);
+
+        while (!queue.empty())
+        {
+            Node<E> *node = queue.front();
+            queue.pop_front();
+
+            if (node->info == value)
+                return node;
+
+            if (node->left != NIL)
+                queue.push_back(node->left);
+            if (node->right != NIL)
+                queue.push_back(node->right);
+        }
+
+        return NIL;
     }
 
 public:

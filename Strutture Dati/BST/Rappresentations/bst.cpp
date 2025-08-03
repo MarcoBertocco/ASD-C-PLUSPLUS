@@ -70,7 +70,7 @@ void BST::tree_insert_aux(Tree &root, Tree z)
     Tree y = NIL;
     Tree x = root;
 
-    while (x != NIL)
+    while (x != NIL) // scorri fino a posizione corretta
     {
         y = x;
         if (z->key < x->key)
@@ -103,6 +103,7 @@ void BST::transplant_aux(Tree &r, Tree n, Tree v)
     if (v != NIL)
         v->parent = n->parent;
 }
+
 void BST::tree_delete_aux(Tree &r, Tree z)
 {
     if (z->left == NIL)

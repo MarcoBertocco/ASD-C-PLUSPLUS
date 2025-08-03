@@ -44,81 +44,63 @@ private:
         }
         return nullptr;
     }
+    
+    void delete_subtree(Node<E> *node)
+    {
+        if (node == nullptr)
+            return;
+
+        Node<E> *child = node->left_child;
+        while (child != nullptr)
+        {
+            Node<E> *next = child->right_sib;
+            delete_subtree(child);
+            child = next;
+        }
+
+        delete node;
+    }
 
     Node<E> *remove_aux(Node<E> *current, const E &value)
     {
         if (current == nullptr)
             return nullptr;
 
-        // Use the find function to locate the node to be deleted
-        Node<E> *nodeToDelete = find(current, value);
+        // First, handle children of the current node recursively
+        Node<E> *prev = nullptr;
+        Node<E> *child = current->left_child;
 
-        if (nodeToDelete == nullptr)
-            return current; // Node not found, return the current tree
-
-        // Get the parent of the node to delete
-        Node<E> *parent = nodeToDelete->parent;
-
-        // Promote the children of the node to delete
-        Node<E> *child = nodeToDelete->left_child;
-        if (child != nullptr)
+        while (child != nullptr)
         {
-            // Attach the children to the parent
-            if (parent == nullptr)
+            Node<E> *next = child->right_sib;
+
+            // If child matches value, remove it and its subtree
+            if (child->info == value)
             {
-                // If the node to delete is the root, make the first child the new root
-                current = child;
-                current->parent = nullptr;
+                // Disconnect from parent
+                if (prev == nullptr)
+                    current->left_child = next; // child was the first child
+                else
+                    prev->right_sib = next; // skip over child
+
+                delete_subtree(child); // delete entire subtree
             }
             else
             {
-                // Attach the children to the parent's children list
-                child->parent = parent;
-                if (parent->left_child == nodeToDelete)
-                {
-                    parent->left_child = child;
-                }
-                else
-                {
-                    Node<E> *prevSibling = parent->left_child;
-                    while (prevSibling->right_sib != nodeToDelete)
-                        prevSibling = prevSibling->right_sib;
-                    prevSibling->right_sib = child;
-                }
+                remove_aux(child, value); // recursive call
+                prev = child;
             }
 
-            // Attach the remaining siblings of the node to delete to the last child
-            Node<E> *lastChild = child;
-            while (lastChild->right_sib != nullptr)
-                lastChild = lastChild->right_sib;
-            lastChild->right_sib = nodeToDelete->right_sib;
+            child = next;
         }
-        else
+
+        // Now check if current itself needs to be deleted (only if it's root-level call)
+        if (current->info == value)
         {
-            // If the node to delete has no children, just remove it from the parent's children list
-            if (parent != nullptr)
-            {
-                if (parent->left_child == nodeToDelete)
-                {
-                    parent->left_child = nodeToDelete->right_sib;
-                }
-                else
-                {
-                    Node<E> *prevSibling = parent->left_child;
-                    while (prevSibling->right_sib != nodeToDelete)
-                        prevSibling = prevSibling->right_sib;
-                    prevSibling->right_sib = nodeToDelete->right_sib;
-                }
-            }
-            else
-            {
-                // If the node to delete is the root and has no children, the tree becomes empty
-                current = nullptr;
-            }
+            delete_subtree(current);
+            return nullptr;
         }
 
-        // Delete the node itself
-        delete nodeToDelete;
         return current;
     }
 
