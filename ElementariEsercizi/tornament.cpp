@@ -56,11 +56,7 @@ int scarto(int n, vector<int> punteggi)
 {
     merge_sort(punteggi, 0, n - 1); // O(nlog(n))
     int cont = 0;
-    for (auto x : punteggi)
-    {
-        cout << x << " ";
-    }
-    cout << endl;
+    
     for (int i = 0; i < n; i += 2) // O(n)
     {
         cont += (punteggi[i + 1] - punteggi[i]);

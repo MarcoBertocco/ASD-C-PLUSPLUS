@@ -15,7 +15,7 @@ void stampaVettore(const vector<int> &vettore)
 
 int father(int i)
 {
-    return (i - 1) / 2;
+    return floor((i - 1) / 2);
 }
 
 int left(int i)
@@ -35,13 +35,11 @@ void max_heapify(vector<int> &A, int heap_size, int i) // T(n) = O(h) = O(log n)
     int r = right(i);
 
     if (l < heap_size && A[l] > A[massimo])
-    {
         massimo = l;
-    }
+
     if (r < heap_size && A[r] > A[massimo])
-    {
         massimo = r;
-    }
+
     stampaVettore(A);
     if (i != massimo)
     {

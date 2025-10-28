@@ -51,27 +51,6 @@ void merge_sort(vector<int> &A, int p, int r) // 2T(n/2) + O(n) -> O(nlog(n))
     }
 }
 
-bool twoSumRec(vector<int> &A, int i, int j, int k, int n) {
-    if (j >= k) return false;
-
-    int sum = A[i] + A[j] + A[k];
-    if (sum == 0) return true;
-    else if (sum < 0) return twoSumRec(A, i, j + 1, k, n);
-    else return twoSumRec(A, i, j, k - 1, n);
-}
-
-bool threePos1Rec(vector<int> &A, int i, int n) {
-    if (i >= n - 2) return false; // base case
-    if (twoSumRec(A, i, i + 1, n - 1, n)) return true;
-    return threePos1Rec(A, i + 1, n); // try next i
-}
-
-bool threePos1(vector<int> A, int n) {
-    merge_sort(A, 0, n - 1); // or std::sort(A.begin(), A.end());
-    
-    return threePos1Rec(A, 0, n);
-}
-
 // solution
 bool threePos(vector<int> A, int n)
 {
@@ -89,9 +68,9 @@ bool threePos(vector<int> A, int n)
             if (sum == 0)
                 end = true;
             else if (sum < 0)
-                j++;
-            else
                 k--;
+            else
+                j++;
         }
     }
 
@@ -101,5 +80,4 @@ int main()
 {
     vector<int> A = {-7, -5, -3, -1, 0, 1, 4, 6};
     cout << "Esiste? " << ((threePos(A, A.size())) ? "YES" : "NO") << endl;
-    cout << "Esiste? " << ((threePos1(A, A.size())) ? "YES" : "NO") << endl;
 }
