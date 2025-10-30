@@ -40,9 +40,9 @@ void orderMod3(vector<int> &vet, int n)
 }
 int main()
 {
-    int n = 12;
+    
     vector<int> vettore = {1, 5, 8, 9, 4, 6, 3, 6, 6, 3, 2, 7};
-
+    int n = vettore.size();
     orderMod3(vettore, n);
 
     for (auto v : vettore)

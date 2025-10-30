@@ -58,7 +58,7 @@ void merge_sort(vector<int> &punteggi, int p, int r) // 2T(n/2) + O(n) -> O(nlog
 
 void missingNumbers(vector<int> A, int n)
 {
-    merge_sort(A, 0, n); // O(nlog(n))
+    merge_sort(A, 0, n - 1); // O(nlog(n))
 
     cout << "A = { ";
     for (int x : A)
