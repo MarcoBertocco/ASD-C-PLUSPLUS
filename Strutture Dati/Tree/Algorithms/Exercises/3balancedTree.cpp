@@ -24,7 +24,7 @@ void three_balanced_aux(Tree n, int &min, int &max)
         three_balanced_aux(n->right, min_dx, max_dx);
 
         min = ((min_sx <= min_dx) ? min_sx : min_dx) + 1;
-        max = ((max_sx <= max_dx) ? max_sx : max_dx) + 1;
+        max = ((max_sx > max_dx) ? max_sx : max_dx) + 1;
     }
 }
 

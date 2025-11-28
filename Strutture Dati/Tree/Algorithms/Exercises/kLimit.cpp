@@ -18,26 +18,20 @@ struct Node
 };
 typedef Node *PNodeG;
 
-int kLimitTree_rec(PNodeG u, int k, int &res)
+void kLimitTree_rec(PNodeG u, int k, int somma, int &res)
 {
     if (u != nullptr && res != -1)
     {
-        int left = kLimitTree_rec(u->left, k, res);
-        int right = kLimitTree_rec(u->right, k, res);
-
-        if (left > k || right > k)
-        {
-            res = -1;
-        }
-        return left + right + u->key;
+        kLimitTree_rec(u->left, k, somma + u->key, res);
+        kLimitTree_rec(u->right, k, somma + u->key, res);
     }
-    return 0;
+    else  res = (somma > k) ? (-1) : res;
 }
 
 bool kLimitTree(PNodeG root, int k)
 {
-    int res = 1;
-    kLimitTree_rec(root, k, res);
+    int res = 1, somma = 0;
+    kLimitTree_rec(root, k, somma, res);
     return (res == 1);
 }
 
@@ -71,9 +65,7 @@ int main()
     root->right->left = new Node(2);
     root->right->right = new Node(1);
 
-    root->right->right->right = new Node(20);
-
     print_tree(root);
 
-    cout << kLimitTree(root, 22) << endl;
+    cout << "Is kLimit ? " << ((kLimitTree(root, 8))?"yes":"no") << endl;
 }

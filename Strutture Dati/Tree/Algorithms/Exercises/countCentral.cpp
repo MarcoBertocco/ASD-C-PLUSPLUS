@@ -1,6 +1,15 @@
 #include <iostream>
 using namespace std;
 #define NIL nullptr
+/*
+Un nodo di un albero binario è detto centrale se il numero di foglie del sottoalbero di cui è radice è pari
+alla somma delle chiavi dei nodi appartementi al percorso dalla radice al nodo stesso.
+a. Scrivere una funzione efficiente in C che restituisca il numero di nodi centrali.
+b. Discutere la complessità della soluzione trovata.
+c. Se vogliamo modificare la funzione in modo che restituisca l’insieme dei nodi centrali che tipo
+di struttura dati si può utilizzare per rappresentare l’insieme?
+ */
+
 struct Node
 {
     int key;
@@ -11,42 +20,28 @@ struct Node
 };
 typedef Node *Tree;
 
-int count_central_aux(Tree n, int sum, int &num_l)
+int count_central_aux(Tree n, int sum, int &central_nodes)
 {
-    int central_nodes, left_nodes, left_leaves_num, right_nodes, right_leaves_num;
-
-    if (n == NIL)
+    if (n != NIL)
     {
-        num_l = 0;
-        return 0;
+        int left = count_central_aux(n->left, sum + n->key, central_nodes);
+        int right = count_central_aux(n->right, sum + n->key, central_nodes);
+        int tot_f = left + right;
+        if (tot_f == sum + n->key)
+        {
+            cout << left + right << " " << sum << " " << n->key << endl;
+            central_nodes++;
+        }
+        return tot_f + (n->left == NIL && n->right == NIL);
     }
-
-    // leaf case cause i have dto count leaves
-    if (n->left == NIL && n->right == NIL)
-    {
-        num_l = 1;
-        central_nodes = 0;
-    }
-    else
-    {
-        left_nodes = count_central_aux(n->left, sum + n->key, left_leaves_num);
-        right_nodes = count_central_aux(n->right, sum + n->key, right_leaves_num);
-
-        num_l = left_leaves_num + right_leaves_num;
-        central_nodes = left_nodes + right_nodes;
-    }
-
-    if (num_l == sum + n->key)
-    {
-        return central_nodes + 1;
-    }
-    return central_nodes;
+    return 0;
 }
 
 int count_central(Tree r)
 {
-    int num_leaves;
-    return count_central_aux(r, 0, num_leaves);
+    int central_nodes = 0;
+    count_central_aux(r, 0, central_nodes);
+    return central_nodes;
 }
 
 int main()

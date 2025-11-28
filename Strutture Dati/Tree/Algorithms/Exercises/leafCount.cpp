@@ -31,6 +31,24 @@ int leafCount(PNodeG root)
     return leafCount_rec(root);
 }
 
+void leafCount1_rec(PNodeG u, int &count)
+{
+    if (u != nullptr)
+    {
+        leafCount1_rec(u->left_child, count);
+        if (u->left_child == nullptr)
+            count++;
+        leafCount1_rec(u->right_sib, count);
+    }
+}
+
+int leafCount1(PNodeG r)
+{
+    int count = 0;
+    leafCount1_rec(r, count);
+    return count;
+}
+
 void print_tree(PNodeG root, int level = 0)
 {
     if (root == nullptr)
@@ -77,11 +95,17 @@ int main()
     cout << "Numero foglie: \n"
          << leafCount(root) << endl;
 
+    cout << "Numero foglie: \n"
+         << leafCount1(root) << endl;
+
     // Print the tree structure
     cout << "Tree Structure:" << endl;
     print_tree(root1);
 
     cout << "Numero foglie: \n"
          << leafCount(root1) << endl;
+
+    cout << "Numero foglie: \n"
+         << leafCount1(root1) << endl;
     return 0;
 }

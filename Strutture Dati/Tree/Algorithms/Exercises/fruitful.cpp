@@ -1,6 +1,14 @@
 #include <iostream>
 #include <iomanip>
 using namespace std;
+/*
+Si scriva una procedura efficiente in C o C++ che assegni True al campo fruitful
+del nodo se e solo se la somma delle chiavi dei nodi di ciascuno dei sottoalberi
+radicati nei figli è maggiore di una costante k fornita in input.
+Il prototipo della procedura è:
+void set_fruitful(PTNode r, int k) 
+*/
+
 #define NIL nullptr
 struct Node
 {

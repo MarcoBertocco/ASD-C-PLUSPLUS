@@ -1,5 +1,9 @@
 #include <iostream>
 using namespace std;
+/*
+Sia T un albero generale i cui nodi hanno chiavi intere e gli attributi: key, left child, right sibling.
+Scrivere un algoritmo che trasforma T raddoppiando i valori di tutte le chiavi sui livelli dispari dell’albero.
+*/
 #define NIL nullptr
 struct Node
 {
@@ -12,9 +16,9 @@ typedef Node *Tree;
 
 void transform_double_value(Tree u)
 {
-    Tree iter;
     if (u != NIL)
     {
+        Tree iter;
         u->key = u->key * 2;
         transform_double_value(u->right_sib);
         iter = u->left_child;
