@@ -25,7 +25,25 @@ void kLimitTree_rec(PNodeG u, int k, int somma, int &res)
         kLimitTree_rec(u->left, k, somma + u->key, res);
         kLimitTree_rec(u->right, k, somma + u->key, res);
     }
-    else  res = (somma > k) ? (-1) : res;
+    else
+        res = (somma > k) ? (-1) : res;
+}
+
+int klimit_aux(PNodeG u, int k)
+{
+    if (u != nullptr)
+    {
+        int left = klimit_aux(u->left, k - u->key);
+        int right = klimit_aux(u->right, k - u->key);
+        return ((left + right) == 2);
+    }
+    else
+        return (k >= 0);
+}
+
+bool klimit(PNodeG root, int k)
+{
+    return klimit_aux(root, k);
 }
 
 bool kLimitTree(PNodeG root, int k)
@@ -67,5 +85,6 @@ int main()
 
     print_tree(root);
 
-    cout << "Is kLimit ? " << ((kLimitTree(root, 8))?"yes":"no") << endl;
+    cout << "Is kLimit ? " << ((kLimitTree(root, 8)) ? "yes" : "no") << endl;
+    cout << "Is kLimit ? " << ((klimit(root, 8)) ? "yes" : "no") << endl;
 }

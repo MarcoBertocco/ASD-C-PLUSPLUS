@@ -26,13 +26,13 @@ int count_central_aux(Tree n, int sum, int &central_nodes)
     {
         int left = count_central_aux(n->left, sum + n->key, central_nodes);
         int right = count_central_aux(n->right, sum + n->key, central_nodes);
-        int tot_f = left + right;
+        int tot_f = left + right + (n->left == NIL && n->right == NIL);
         if (tot_f == sum + n->key)
         {
-            cout << left + right << " " << sum << " " << n->key << endl;
+            cout << tot_f << " " << sum + n->key << " " << n->key << endl;
             central_nodes++;
         }
-        return tot_f + (n->left == NIL && n->right == NIL);
+        return tot_f;
     }
     return 0;
 }
@@ -41,6 +41,30 @@ int count_central(Tree r)
 {
     int central_nodes = 0;
     count_central_aux(r, 0, central_nodes);
+    return central_nodes;
+}
+
+int node_central_aux(Tree u, int &cc, int sum)
+{
+    if (u != NIL)
+    {
+        int tot = sum + u->key;
+        int left = node_central_aux(u->left, cc, tot);
+        int right = node_central_aux(u->right, cc, tot);
+
+        int leaves = (!u->left && !u->right) + left + right;
+
+        if (leaves == tot)
+            cc++;
+        return leaves;
+    }
+    return 0;
+}
+
+int node_central(Tree r)
+{
+    int central_nodes = 0;
+    node_central_aux(r, central_nodes, 0);
     return central_nodes;
 }
 
@@ -56,6 +80,7 @@ int main()
     // Count nodes with equal white and black descendants
     int result = count_central(root);
     cout << "Number of Central Nodes: " << result << endl;
-
+    int result1 = node_central(root);
+    cout << "Number of Central Nodes: " << result1 << endl;
     return 0;
 }
