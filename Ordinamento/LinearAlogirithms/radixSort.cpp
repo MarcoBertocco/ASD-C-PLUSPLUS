@@ -23,7 +23,7 @@ int cifra(int x, int n, int i)
 void counting_sort(vector<int> &A, int k, int i)
 {
     int n = A.size();
-    vector<int> B(n, 0); // vettore
+    vector<int> B(n); // vettore
     vector<int> C(k, 0); // vettore occorrenze
 
     for (int j = 0; j < n; j++)
@@ -35,7 +35,7 @@ void counting_sort(vector<int> &A, int k, int i)
 #endif
 
 #ifdef DESCENDING_ORDER // somme postfisse
-    for (int j = k - 1; j >= 0; j--)
+    for (int j = k - 2; j >= 0; j--)
         C[j] += C[j + 1];
 #endif
 

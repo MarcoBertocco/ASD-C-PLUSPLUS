@@ -18,39 +18,32 @@ struct Node
 };
 typedef Node *PNodeG;
 
-void kLimitTree_rec(PNodeG u, int k, int somma, int &res)
+void klimited_aux(PNodeG v, int &somma, bool &res, int k)
 {
-    if (u != nullptr && res != -1)
+    if (v == nullptr)
     {
-        kLimitTree_rec(u->left, k, somma + u->key, res);
-        kLimitTree_rec(u->right, k, somma + u->key, res);
+        somma = 0;
     }
     else
-        res = (somma > k) ? (-1) : res;
-}
-
-int klimit_aux(PNodeG u, int k)
-{
-    if (u != nullptr)
     {
-        int left = klimit_aux(u->left, k - u->key);
-        int right = klimit_aux(u->right, k - u->key);
-        return ((left + right) == 2);
+        int sumr, suml;
+        klimited_aux(v->left, suml, res, k);
+        klimited_aux(v->right, sumr, res, k);
+        if (res)
+        {
+            if (suml + v->key > k || sumr + v->key > k)
+                res = false;
+            somma = ((suml > sumr) ? suml : sumr) + v->key;
+        }
     }
-    else
-        return (k >= 0);
 }
 
-bool klimit(PNodeG root, int k)
+bool klimited(PNodeG r, int k)
 {
-    return klimit_aux(root, k);
-}
-
-bool kLimitTree(PNodeG root, int k)
-{
-    int res = 1, somma = 0;
-    kLimitTree_rec(root, k, somma, res);
-    return (res == 1);
+    bool res = true;
+    int somma;
+    klimited_aux(r, somma, res, k);
+    return res;
 }
 
 void print_tree(PNodeG root, int level = 0)
@@ -85,6 +78,17 @@ int main()
 
     print_tree(root);
 
-    cout << "Is kLimit ? " << ((kLimitTree(root, 8)) ? "yes" : "no") << endl;
-    cout << "Is kLimit ? " << ((klimit(root, 8)) ? "yes" : "no") << endl;
+    PNodeG root1 = new Node(-2);
+    root1->left = new Node(2);
+    root1->right = new Node(2);
+
+    root1->left->left = new Node(1);
+    root1->left->right = new Node(0);
+
+    root1->right->right = new Node(2);
+
+    print_tree(root1);
+
+    cout << "Is kLimit ? " << ((klimited(root, 8)) ? "yes" : "no") << endl;
+    cout << "Is kLimit ? " << ((klimited(root1, 2)) ? "yes" : "no") << endl;
 }

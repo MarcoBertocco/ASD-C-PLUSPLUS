@@ -14,7 +14,6 @@ struct Node
     int key;
 
     Node(int _k, Node *_lc = nullptr, Node *_rs = nullptr) : key(_k), left_child(_lc), right_sib(_rs) {}
-    ~Node();
 };
 typedef Node *PNodeG;
 
@@ -25,7 +24,7 @@ int kArio_rec(PNodeG n, int k, int &res)
         int rS = kArio_rec(n->right_sib, k, res);
         int lC = kArio_rec(n->left_child, k, res);
         rS++;
-        cout << rS <<" "<< lC << endl;
+        // cout << rS << " " << lC << endl;
         if (n->left_child != nullptr)
         {
             if (lC != k)
@@ -43,6 +42,37 @@ bool kArio(PNodeG root, int k)
     int res = 1;
     kArio_rec(root, k, res);
     return (res == 1) ? true : false;
+}
+void kariocompleted_aux(PNodeG v, int &sum, bool &res, int k)
+{
+    if (v == nullptr)
+    {
+        sum = 0;
+    }
+    else
+    {
+        int sumrs, sumlc;
+        kariocompleted_aux(v->left_child, sumlc, res, k);
+        kariocompleted_aux(v->right_sib, sumrs, res, k);
+
+        if (res)
+        {
+            if (v->left_child != nullptr)
+            {
+                if (sumlc != k)
+                    res = false;
+            }
+            sum = sumrs + 1;
+        }
+    }
+}
+
+bool kariocompleted(PNodeG root, int k)
+{
+    bool res = true;
+    int sum;
+    kariocompleted_aux(root, sum, res, k);
+    return res;
 }
 
 void print_tree(PNodeG root, int level = 0)
@@ -62,6 +92,7 @@ void print_tree(PNodeG root, int level = 0)
     // Recursive call for siblings
     print_tree(root->right_sib, level);
 }
+
 int main()
 {
     int k = 3;
@@ -72,8 +103,8 @@ int main()
     root->left_child->left_child = new Node(2);
     root->left_child->left_child->right_sib = new Node(1);
     root->left_child->right_sib = new Node(4);
-    root->left_child->right_sib->right_sib = new Node(5);
-    root->left_child->right_sib->right_sib->left_child = new Node(1);
+    root->left_child->right_sib->left_child = new Node(1);
+    root->left_child->right_sib->left_child->right_sib = new Node(1);
 
     // Mine
     PNodeG root1 = new Node(10);
@@ -86,17 +117,31 @@ int main()
     root1->left_child->right_sib->right_sib->left_child = new Node(2);
     root1->left_child->right_sib->right_sib->left_child->right_sib = new Node(1);
 
+    int k1 = 2, k2 = 3;
+
     // Print the tree structure
     cout << "Tree Structure:" << endl;
     print_tree(root);
 
-    cout << "isKario k = 3? " << ((kArio(root, 3)) ? "Yes" : "No") << endl;
+    cout << "isKario k = " << k1 << "? " << ((kArio(root, k1)) ? "Yes" : "No") << endl;
 
     // Print the tree structure
     cout << "Tree Structure:" << endl;
     print_tree(root1);
 
-    cout << "isKario k = 3? " << ((kArio(root1, 3)) ? "Yes" : "No") << endl;
+    cout << "isKario k = " << k2 << "? " << ((kArio(root1, k2)) ? "Yes" : "No") << endl;
+
+    // Print the tree structure
+    cout << "Tree Structure:" << endl;
+    print_tree(root);
+
+    cout << "isKario k = " << k1 << "? " << ((kariocompleted(root, k1)) ? "Yes" : "No") << endl;
+
+    // Print the tree structure
+    cout << "Tree Structure:" << endl;
+    print_tree(root1);
+
+    cout << "isKario k = " << k2 << "? " << ((kariocompleted(root1, k2)) ? "Yes" : "No") << endl;
 
     return 0;
 }

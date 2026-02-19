@@ -28,7 +28,7 @@ int right(int i)
     return i * 2 + 2;
 }
 
-void max_heapify(vector<int> &A, int heap_size, int i) // T(n) = O(h) = O(log n) whr h is Height Heap
+void max_heapify(vector<int> &A, int heap_size, int i) // T(n) = O(h) = O(log n) where h is Height Heap
 {
     int massimo = i;
     int l = left(i);

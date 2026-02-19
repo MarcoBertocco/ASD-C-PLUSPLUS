@@ -17,7 +17,7 @@ int top_down_LCS_rec(string &X, string &Y, vector<vector<int>> &c, int i, int j)
             c[i][j] = 0;
         else
         {
-            if (X[i] == Y[j])
+            if (X[i - 1] == Y[j - 1])
                 c[i][j] = top_down_LCS_rec(X, Y, c, i - 1, j - 1) + 1;
             else
                 c[i][j] = max(top_down_LCS_rec(X, Y, c, i - 1, j), top_down_LCS_rec(X, Y, c, i, j - 1));
