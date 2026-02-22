@@ -91,17 +91,19 @@ void BST::tree_insert_aux(Tree &root, Tree z)
     }
 }
 
-void BST::transplant_aux(Tree &r, Tree n, Tree v)
+void BST::transplant_aux(Tree &r, Tree u, Tree v)
 {
-    if (n->parent == NIL)
+    if (u->parent == NIL)
         r = v;
-    else if (n == n->parent->left)
-        n->parent->left = v;
     else
-        n->parent->right = v;
-
+    {
+        if (u == u->parent->left)
+            u->parent->left = v;
+        else
+            u->parent->right = v;
+    }
     if (v != NIL)
-        v->parent = n->parent;
+        v->parent = u->parent;
 }
 
 void BST::tree_delete_aux(Tree &r, Tree z)

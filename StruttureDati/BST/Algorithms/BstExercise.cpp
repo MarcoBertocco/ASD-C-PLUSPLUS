@@ -31,7 +31,7 @@ int range(Tree u, int k1, int k2, vector<int> &v)
 
 int main()
 {
-    int arr[] = {1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 7, 7, 8, 55, 55, 60};
+    int arr[] = {1, 3, 5, 7, 9};
     vector<int> vettore(arr, arr + sizeof(arr) / sizeof(arr[0]));
     BST tree = build_bst(vettore);
 

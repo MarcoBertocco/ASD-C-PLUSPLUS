@@ -39,9 +39,11 @@ int maxOcc(BST tree) // Theta(n)
 }
 int main()
 {
-    int arr[] = {1, 2, 2, 7, 7, 8, 55, 55, 55, 60};
+    int arr[] = {1, 2, 2, 2, 2, 2, 7, 7, 8, 55, 55, 55, 60};
     vector<int> vettore(arr, arr + sizeof(arr) / sizeof(arr[0]));
     BST tree = build_bst(vettore);
 
     tree.tree_display();
+
+    cout << "Max Occurence " << maxOcc(tree) << endl;
 }

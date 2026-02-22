@@ -111,7 +111,7 @@ int main()
 
     vector<int> heap4 = differenza(heap1, heap2);
 
-    cout << "Intersezione: ";
+    cout << "Differenza: ";
     stampaVettore(heap4);
     return 0;
 }
