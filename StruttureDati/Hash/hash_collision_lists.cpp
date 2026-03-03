@@ -81,9 +81,10 @@ int closestPrime(int k)
 {
     for (int i = k - 1; i >= 2; i--)
     {
-        if (isPrime(i))
+        if (i % 2 != 0)
         {
-            return i;
+            if (isPrime(i))
+                return i;
         }
     }
     return -1; // Nessun primo trovato (es. se k <= 2)
@@ -91,41 +92,26 @@ int closestPrime(int k)
 
 int main()
 {
-    int Universe = 150, collisions = 4;
-    global_m = closestPrime(floor(Universe / collisions));
-    cout<<global_m<<endl;
+    vector<int> x = {12, 23, 35, 47, 61, 73, 85, 92, 101, 13, 21, 32, 45, 67, 79, 87, 95, 104, 11, 24, 33, 46, 63, 74, 86, 97, 106, 17, 26, 31, 44, 62, 75, 82, 91, 103};
+
+    int keyUniverse = x.size(), collisions = 3;
+    global_m = closestPrime(floor(keyUniverse / collisions));
+    cout << global_m << endl;
     if (global_m == -1)
         global_m = 2;
     vector<Nodes> T(global_m, NIL);
 
-    Nodes n1 = new Node(15);
-    Nodes n2 = new Node(25);
-    Nodes n3 = new Node(35);
-    Nodes n4 = new Node(45);
-    Nodes n5 = new Node(55);
-    Nodes n6 = new Node(65);
-    Nodes n7 = new Node(75);
-    Nodes n8 = new Node(85);
-    Nodes n9 = new Node(95);
-    Nodes n10 = new Node(105);
+    for (int i = 0; i < x.size(); i++)
+    {
+        chained_hash_insert(T, new Node(x[i]));
+    }
 
-    chained_hash_insert(T, n1);
-    chained_hash_insert(T, n2);
-    chained_hash_insert(T, n3);
-    chained_hash_insert(T, n4);
-    chained_hash_insert(T, n5);
-    chained_hash_insert(T, n6);
-    chained_hash_insert(T, n7);
-    chained_hash_insert(T, n8);
-    chained_hash_insert(T, n9);
-    chained_hash_insert(T, n10);
-
-    Nodes found = chained_hash_search(T, 25);
+    Nodes found = chained_hash_search(T, x[1]);
     if (found)
         cout << "Found: " << found->key << endl;
 
-    chained_hash_delete(T, n2);
-    found = chained_hash_search(T, 25);
+    chained_hash_delete(T, new Node(x[1]));
+    found = chained_hash_search(T, x[1]);
     if (!found)
         cout << "Node 25 deleted successfully." << endl;
 

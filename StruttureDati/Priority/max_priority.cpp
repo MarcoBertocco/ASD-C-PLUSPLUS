@@ -25,9 +25,11 @@ int MaxPriorityQueue::heapExtract()
 {
     if (heap.empty())
         throw std::runtime_error("Heap underflow");
+    
     int max = heap[0];
     heap[0] = heap.back();
     heap.pop_back();
+    
     if (!heap.empty())
         maxHeapify(0);
     return max;
