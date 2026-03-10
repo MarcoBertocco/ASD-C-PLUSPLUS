@@ -73,7 +73,7 @@ void BST::tree_insert_aux(Tree &root, Tree z)
     while (x != NIL) // scorri fino a posizione corretta
     {
         y = x;
-        if (z->key < x->key)
+        if (z->key <= x->key)
             x = x->left;
         else
             x = x->right;
@@ -84,7 +84,7 @@ void BST::tree_insert_aux(Tree &root, Tree z)
         root = z;
     else
     {
-        if (z->key < y->key)
+        if (z->key <= y->key)
             y->left = z;
         else
             y->right = z;
@@ -132,12 +132,12 @@ void BST::tree_display_aux(Tree &r, int h)
     if (r == NIL)
         return;
 
-    h += 5;
+    h += 1;
     tree_display_aux(r->right, h);
 
     std::cout << std::endl;
-    for (int i = 5; i < h; i++)
-        std::cout << " ";
+    for (int i = 1; i < h; i++)
+        std::cout << "   ";
     std::cout << r->key << "\n";
 
     tree_display_aux(r->left, h);
@@ -218,10 +218,28 @@ Tree build_bst_aux(std::vector<int> A, int inf, int sup, Tree parent)
         return n;
     }
 }
+void build_bst_C_aux(std::vector<int> A, int inf, int sup, BST &t)
+{
+    if (inf <= sup)
+    {
+        int med = floor((inf + sup) / 2);
+        t.tree_insert(A[med]);
+        build_bst_C_aux(A, inf, med - 1, t);
+        build_bst_C_aux(A, med + 1, sup, t);
+    }
+}
 
 BST build_bst(std::vector<int> A)
 {
     BST t = BST();
     t.root = build_bst_aux(A, 0, A.size() - 1, NIL);
+    return t;
+}
+
+BST build_bst_C(std::vector<int> A)
+{
+    BST t = BST();
+    t.root = NIL;
+    build_bst_C_aux(A, 0, A.size() - 1, t);
     return t;
 }

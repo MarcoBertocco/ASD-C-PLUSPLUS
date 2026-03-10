@@ -34,6 +34,7 @@ private:
     void transplant_aux(Tree &r, Tree n, Tree v);
     void tree_delete_aux(Tree &r, Tree z);
     void tree_display_aux(Tree &r, int h);
+
 public:
     Tree root;
     BST();
@@ -43,13 +44,13 @@ public:
     Tree tree_successor(Tree n = NIL);
     Tree tree_predecessor(Tree n = NIL);
     void tree_insert(int z);
-    void transplant(Tree& r, Tree n, Tree v);
+    void transplant(Tree &r, Tree n, Tree v);
     void tree_delete(Tree z);
     void tree_display();
-    
 };
 
 Tree build_bst_aux(std::vector<int> A, int inf, int sup, Tree parent);
 BST build_bst(std::vector<int> A);
-
+void build_bst_C_aux(std::vector<int> A, int inf, int sup, BST &t);
+BST build_bst_C(std::vector<int> A);
 #endif // BST_HPP
