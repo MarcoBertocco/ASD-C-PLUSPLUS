@@ -12,7 +12,7 @@ g++ -O2 filename.cpp -o filename
 time ./filename
 ```
 
-## Execute Sorting Algorithms
+## Execute BST Algorithms
 To compile and execute BST algorithms in the **BST/Algorythms** directory:
 
 ### **Compilation**
