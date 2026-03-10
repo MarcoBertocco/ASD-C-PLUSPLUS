@@ -13,7 +13,7 @@ time ./filename
 ```
 
 ## Execute BST Algorithms
-To compile and execute BST algorithms in the **BST/Algorythms** directory:
+To compile and execute BST algorithms in the **BST/Algorithms** directory:
 
 ### **Compilation**
 Use the following command to compile a C++ file:
